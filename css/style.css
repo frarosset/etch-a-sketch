@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
+
+:root {   
+    /* Colors */
+    --black: rgb(0, 0, 0);
+    --white: #f1f1f1;
+    --grey: rgb(171, 171, 171);
+    --col10: #F55555;
+    --col70: #6A6FFD;
+    --col30 :#40B1F8;
+  
+    /* Font sizes */
+    --main-fontsize: 16px; 
+    --hdr-fontsize: 36px;
+  
+    /* Font family */
+    --main-font: 'Gloria Hallelujah';
+    --hdr-font: 'Gloria Hallelujah';
+  
+    /*Margins and paddings*/
+    --main-padding: 10px;
+    --hdr-padding: 10px;
+    --ftr-padding: 20px;
+    --grid-gap:  20px;
+  
+    /*Buttons*/
+    --btn-padding: 20px;
+    --btn-border: 2px;
+    --btn-height: 60px;
+  
+    /* Maximum column width */
+    --col-width: 800px;
+  }
+  
+  
+  html {
+    background-color: var(--white);
+    color:  var(--black);
+    font-family: var(--main-font), sans-serif;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  
+  * { 
+    font-family: inherit;
+    line-height: inherit;
+    color: inherit;
+    box-sizing: border-box;
+    padding:  0;
+    margin: 0;
+  }
+  
+  body{
+    margin:  0 auto;
+    height: 100vh; /*it is assumed the same for <html>*/
+    width: 100%; /* or max-width -- this avoids horizontal scroll bars */
+  }
+  
