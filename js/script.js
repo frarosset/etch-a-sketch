@@ -3,27 +3,41 @@ let gridCols = 12;
 
 let grid = document.querySelector('.grid');
 let gridCnt = document.querySelector('.grid-container');
+
+let nRowsSel = document.querySelector('#nRowsSel');
+let nColsSel = document.querySelector('#nColsSel');
+let nRowsLbl = document.querySelector('#nRowsLbl');
+let nColsLbl = document.querySelector('#nColsLbl');
+
+
 let gridDivs;
 
+function clearGrid(){
+    removeDescendants(grid);
+    gridDivs = [];
+}
+
+function removeDescendants(elem){
+    while (elem.hasChildNodes()) {
+        removeDescendants(elem.lastChild)
+        elem.removeChild(elem.lastChild);
+    }
+}
+
 function createGrid(gridRows,gridCols){
+
+    clearGrid();
 
     let gridAR = gridCols/gridRows;
     let gridCntAR = gridCnt.offsetWidth / gridCnt.offsetHeight;
 
-    console.log(gridCnt);
-console.log('GridAR: '+ gridAR);
-//offsetWidth or clientWidth
-console.log('GridCntAR: '+ gridCntAR + '('+ gridCnt.offsetWidth,gridCnt.offsetHeight+')');
+    setAspectRatio(grid, gridAR);
 
-    setAspectRatio(grid, gridRows,gridCols);
     if (gridAR>=gridCntAR){
         gridCnt.style.flexDirection =  'row';  
     }else{
         gridCnt.style.flexDirection =  'column';  
     }   
-
-
-    /* delete current grid: todo*/
 
     for (let i=0;i<gridRows;i++){
         let row = document.createElement('div');
@@ -40,9 +54,20 @@ console.log('GridCntAR: '+ gridCntAR + '('+ gridCnt.offsetWidth,gridCnt.offsetHe
     gridDivs = document.querySelector('.elemOfGrid');;
 }
 
-function setAspectRatio(elem, nRows,nCols){
-    let ar = nCols/nRows;
+function setAspectRatio(elem, ar){
     elem.style.aspectRatio = ar;
 }
 
 createGrid(gridRows,gridCols);
+
+nRowsSel.addEventListener('input',(e) => {
+    gridRows = e.target.value;
+    nRowsLbl.textContent = gridRows;
+    createGrid(gridRows,gridCols);  
+})
+nColsSel.addEventListener('input',(e) => {
+    gridCols = e.target.value;
+    nColsLbl.textContent = gridCols;
+    createGrid(gridRows,gridCols); 
+})
+

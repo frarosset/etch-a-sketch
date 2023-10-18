@@ -21,7 +21,6 @@
     --main-padding: 10px;
     --hdr-padding: 10px;
     --ftr-padding: 20px;
-    --grid-gap: 20px;
 
     /*Buttons*/
     --btn-padding: 20px;
@@ -125,4 +124,18 @@ h1,footer {
 .elemOfGrid {
     flex: 1 1 0;
     aspect-ratio: 1/1;
+}
+
+/******/
+.settings{
+    width: 100%;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.grid-settings{
+    display:flex;
+    flex-direction: column;
+    gap: var(--setting-gap)
 }
