@@ -1,58 +1,128 @@
 @import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
 
-:root {   
+:root {
     /* Colors */
     --black: rgb(0, 0, 0);
     --white: #f1f1f1;
     --grey: rgb(171, 171, 171);
     --col10: #F55555;
     --col70: #6A6FFD;
-    --col30 :#40B1F8;
-  
+    --col30: #40B1F8;
+
     /* Font sizes */
-    --main-fontsize: 16px; 
+    --main-fontsize: 16px;
     --hdr-fontsize: 36px;
-  
+
     /* Font family */
     --main-font: 'Gloria Hallelujah';
     --hdr-font: 'Gloria Hallelujah';
-  
+
     /*Margins and paddings*/
     --main-padding: 10px;
     --hdr-padding: 10px;
     --ftr-padding: 20px;
-    --grid-gap:  20px;
-  
+    --grid-gap: 20px;
+
     /*Buttons*/
     --btn-padding: 20px;
     --btn-border: 2px;
     --btn-height: 60px;
-  
+
     /* Maximum column width */
-    --col-width: 800px;
-  }
-  
-  
-  html {
+    --col-width: 600px;
+}
+
+
+html {
     background-color: var(--white);
-    color:  var(--black);
+    color: var(--black);
     font-family: var(--main-font), sans-serif;
     font-weight: 400;
     line-height: 1.2;
-  }
-  
-  * { 
+}
+
+* {
     font-family: inherit;
     line-height: inherit;
     color: inherit;
     box-sizing: border-box;
-    padding:  0;
+    padding: 0;
     margin: 0;
-  }
-  
-  body{
-    margin:  0 auto;
+}
+
+body {
+    margin: 0 auto;
     height: 100vh; /*it is assumed the same for <html>*/
-    width: 100%; /* or max-width -- this avoids horizontal scroll bars */
-  }
-  
+    width: 100%;   /* or max-width -- this avoids horizontal scroll bars */
+}
+
+body,
+main,
+header,
+footer,
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main,
+header,
+footer {
+    max-width: var(--col-width);
+    width: 100%;
+}
+
+main{
+    flex: 1;
+}
+
+.grid-container{
+    width:100%;
+    height: 100%;
+    flex:1;
+}
+
+/*Debug borders*/
+main,
+header,
+footer{
+    border: 1px solid orange;
+}
+.grid-container{
+    border: 3px solid teal;
+}
+.grid{
+    border: 2px solid red;
+}
+
+/*********************************************/
+
+h1,footer {
+    padding: var(--hdr-padding);
+}
+
+.grid {
+    flex: 1;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    box-sizing: content-box;
+}
+
+.rowOfGrid {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.showGrid {
+    border: 1px solid var(--grey);
+}
+
+.elemOfGrid {
+    flex: 1 1 0;
+    aspect-ratio: 1/1;
+}

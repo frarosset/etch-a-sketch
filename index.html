@@ -14,12 +14,22 @@
     </header>
     <main>
         <div class="settings">
+            placeholder
         </div>
-        <div class="grid">
+        <!-- The following container is a flexbox, which is needed to make 
+             the grid occupy the entire space left in the main, while also
+             taking into account the aspect ratio of the grid.
+             This is done by setting property flex:1 for its children div 
+             representing the grid.
+             Depending, on the aspect-ratio of the grid, the flexDirection 
+             property is set to either row or column, so that the grid grow
+             opportunely and is a large as possible.
+        -->
+        <div class="grid-container">
+            <div class="grid"></div>
         </div>
     </main>
     <footer>
-
     </footer>
 </body>
 </html>
