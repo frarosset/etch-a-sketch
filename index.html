@@ -15,10 +15,15 @@
     <main>
         <div class="settings">
             <div class="grid-settings">
-                <label for="nRowsSel">Rows:    <span id="nRowsLbl"></span></label>
-                <input type="range" min="1" max="120" value="20" class="slider" id="nRowsSel">
-                <label for="nColsSel">Columns: <span id="nColsLbl"></span></label>
-                <input type="range" min="1" max="120" value="20" class="slider" id="nColsSel">
+                <div>
+                    <label for="nRowsSel" class="unselectable"><span >Rows:</span><span id="nRowsLbl"></span></label>
+                    <input type="range" min="1" max="120" value="20" class="slider" id="nRowsSel">
+                </div>
+                <div>
+                    <label for="nColsSel" class="unselectable"><span>Columns:</span><span id="nColsLbl"></span></label>
+                    <input type="range" min="1" max="120" value="20" class="slider" id="nColsSel">
+                </div>
+                <label for="keepARSel" class="unselectable">Keep AR</span><input type="range" min="0" max="1" value="0" class="slider slider-toggle" id="keepARSel"></label>
             </div>
             <p>placeholder</p>
         </div>
@@ -33,6 +38,10 @@
         -->
         <div class="grid-container">
             <div class="grid"></div>
+        </div>
+        <div class="info">
+            <div>Grid: <span id="gridInfo"></span></div>
+            <div>Fixed AR: <span id="fixedARInfo"></span></div>
         </div>
     </main>
     <footer>
