@@ -16,7 +16,8 @@ let showGridSel = document.querySelector('#showGridSel');
 let fixedARInfo = document.querySelector('#fixedARInfo');
 let gridInfo = document.querySelector('#gridInfo');
 
-gridInfo
+let oneColorSel = document.querySelector('#oneColorSel');
+let penColor = oneColorSel.value;
 
 let gridDivs;
 
@@ -58,7 +59,14 @@ function createGrid(gridRows,gridCols){
         for (let j=0; j<gridCols; j++){
             let elem = document.createElement('div');
             elem.classList.add('elemOfGrid');
+            elem.classList.add('unselectable');
             elem.style.backgroundColor = 'white';
+            elem.currentColor = elem.style.backgroundColor;
+
+            elem.addEventListener("pointerdown",pointerDownCallback);
+            elem.addEventListener('pointerenter',pointerEnterCallback);
+            elem.addEventListener('pointerleave',pointerLeaveCallback);
+
             row.appendChild(elem);
         }
         grid.appendChild(row);
@@ -173,3 +181,68 @@ function updateGridInfo(){
     let strAR = gridCols + 'x' + gridRows + ' (AR: ' + (isApprox?'∼':'') + gridARToPrec + ')';
     gridInfo.textContent = strAR;
 }
+
+/* One color mode ---------------------------------------------------------- */
+
+// The following behaviour is imposed:
+//
+// - If the user is using a mouse, hovering on an element just temporarly set the 
+//   color of the element to the selected one. The change is permanent only if a 
+//   left click occurs in such element, or the left mouse button is pressed when 
+//   the pointer either enters  or leaves it. Otherwise, the previous color 
+//   (element.currentColor) is restored once the mouse leaves.
+//
+// - If the user is using touch, the changes are always permanent when
+//   a touch or a slide occur.
+// 
+// To implement this behaviour, the 'pointerenter' and 'pointerleave' events can 
+// be used.
+// See https://stackoverflow.com/questions/27908339/js-touch-equivalent-for-mouseenter
+//
+// Note that PointerDown events are fired when a left/right/middle mouse buttons 
+// are pressed or a touch occurs. This causes the element to 'capture' the pointer, 
+// preventing further pointerleave/enter events unless the capture is explicitly 
+// released. Then, it is necessary to call the method releasePointerCapture(e.pointerId)
+// when a pointerdown event occurs.
+//
+// The CSS attributes 'touch-action: none;' and 'user-select: none;' 
+// must be added to the .elemOfGrid elements, in order to avoid default 
+// touch iterations and selections of such elements.
+//
+// See the buttons code here: https://w3c.github.io/pointerevents/#the-buttons-property
+// In particular, a touch event/sliding or a mouse moving with left buttons pressed 
+// are coded by event.buttons=='1'. There is no need to test for event.pointerType
+
+oneColorSel.addEventListener('input',(e)=>{
+    penColor = oneColorSel.value;
+});
+
+function colorElement(itm,color){
+    itm.style.backgroundColor = color;
+}
+
+function pointerDownCallback(e){
+    //console.log("down - release implicit capture");
+    e.target.currentColor = penColor;
+    e.target.releasePointerCapture(e.pointerId); // Important! (see above)
+}
+
+function pointerEnterCallback(e){
+    //console.log(e.pointerType);
+    if (e.buttons=='1'){
+        e.target.currentColor = penColor;
+    }
+    colorElement(e.target,penColor);
+}
+
+function pointerLeaveCallback(e){
+    if (e.buttons=='1'){
+        e.target.currentColor = penColor;
+    }
+    colorElement(e.target,e.target.currentColor);
+}
+
+
+
+
+

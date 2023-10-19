@@ -163,3 +163,8 @@ h1,footer {
     user-select: none;
 }
 
+.elemOfGrid
+{
+   touch-action: none;
+}
+
