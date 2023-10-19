@@ -8,6 +8,7 @@
     --col10: #F55555;
     --col70: #6A6FFD;
     --col30: #40B1F8;
+    --grid-color: rgb(210, 210, 210);
 
     /* Font sizes */
     --main-fontsize: 16px;
@@ -93,7 +94,7 @@ footer{
     border: 3px solid teal;
 }
 .grid{
-    border: 2px solid red;
+    border: 2px solid var(--grid-color); 
 }
 
 /*********************************************/
@@ -119,7 +120,7 @@ h1,footer {
 }
 
 .showGrid {
-    border: 1px solid var(--grey);
+    outline: 1px solid var(--grid-color);
 }
 
 .elemOfGrid {
@@ -161,3 +162,4 @@ h1,footer {
     -webkit-user-select: none;
     user-select: none;
 }
+

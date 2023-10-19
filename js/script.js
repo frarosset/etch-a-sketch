@@ -12,6 +12,7 @@ let nRowsLbl = document.querySelector('#nRowsLbl');
 let nColsLbl = document.querySelector('#nColsLbl');
 
 let keepARSel = document.querySelector('#keepARSel');
+let showGridSel = document.querySelector('#showGridSel');
 let fixedARInfo = document.querySelector('#fixedARInfo');
 let gridInfo = document.querySelector('#gridInfo');
 
@@ -57,13 +58,17 @@ function createGrid(gridRows,gridCols){
         for (let j=0; j<gridCols; j++){
             let elem = document.createElement('div');
             elem.classList.add('elemOfGrid');
-            elem.classList.add('showGrid');
+            elem.style.backgroundColor = 'white';
             row.appendChild(elem);
         }
         grid.appendChild(row);
     }
 
-    gridDivs = document.querySelector('.elemOfGrid');
+    gridDivs = document.querySelectorAll('.elemOfGrid');
+
+    if (showGridSel.value=='1'){
+        showGrid();
+    }
 
     updateGridInfo();
 }
@@ -132,6 +137,27 @@ keepARSel.addEventListener('input',(e) => {
 
     updateFixedARInfo();
 });
+
+
+showGridSel.addEventListener('input',(e) => {
+    if (e.target.value=='1'){
+        showGrid();
+    } else {
+        hideGrid();
+    }
+});
+
+function showGrid(){
+    gridDivs.forEach(itm =>{
+        itm.classList.add('showGrid');
+    });    
+}
+
+function hideGrid(){
+    gridDivs.forEach(itm =>{
+        itm.classList.remove('showGrid');
+    });    
+}
 
 function updateFixedARInfo(){
     let idealARToPrec = idealAR.toPrecision(2);
