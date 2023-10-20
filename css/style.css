@@ -1,27 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Montserrat&display=swap');
 
 :root {
     /* Colors */
     --black: rgb(0, 0, 0);
-    --white: #f1f1f1;
     --grey: rgb(171, 171, 171);
-    --col10: #F55555;
-    --col70: #6A6FFD;
-    --col30: #40B1F8;
+    --white: #f1f1f1;
     --grid-color: rgb(210, 210, 210);
 
     /* Font sizes */
     --main-fontsize: 16px;
     --hdr-fontsize: 36px;
+    --ftr-fontsize: 12px;
 
     /* Font family */
     --main-font: 'Gloria Hallelujah';
     --hdr-font: 'Gloria Hallelujah';
+    --ftr-font: 'Montserrat';
 
     /*Margins and paddings*/
     --main-padding: 10px;
     --hdr-padding: 10px;
-    --ftr-padding: 20px;
+    --ftr-padding: 5px;
     --setting-gap: 6px;
 
     /*Buttons*/
@@ -30,7 +29,7 @@
     --btn-height: 60px;
 
     /* Maximum column width */
-    --col-width: 600px;
+    --col-width: 1024px;
 }
 
 
@@ -57,6 +56,19 @@ body {
     width: 100%;   /* or max-width -- this avoids horizontal scroll bars */
 }
 
+main,
+header,
+footer {
+    width: 100%;
+}
+
+header,
+main {
+    max-width: var(--col-width);
+}
+
+/* custom style */
+
 body,
 main,
 header,
@@ -65,13 +77,6 @@ footer,
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-main,
-header,
-footer {
-    max-width: var(--col-width);
-    width: 100%;
 }
 
 main{
@@ -85,23 +90,41 @@ main{
 }
 
 /*Debug borders*/
-main,
+/* main,
 header,
 footer{
     border: 1px solid orange;
-}
-.grid-container{
+} */
+/* .grid-container{
     border: 3px solid teal;
-}
+} */
 .grid{
     border: 2px solid var(--grid-color); 
 }
 
-/*********************************************/
+/* Footer */
+footer{
+    background-color: var(--grid-color);
+    color: var(--black);
+    font-family: var(--ftr-font), sans-serif;
+    font-size: var(--ftr-fontsize);
+    font-weight: 400;
+    line-height: 1.2;
+    padding: var(--ftr-padding);    
+}
+footer i{
+    font-size: 1.3em;    
+}
 
-h1,footer {
+
+/* Header */
+
+h1 {
     padding: var(--hdr-padding);
 }
+
+
+/* Grid */
 
 .grid {
     flex: 1;
@@ -129,6 +152,12 @@ h1,footer {
 }
 
 /******/
+
+.settings,
+.info{
+    padding: var(--main-padding);
+}
+
 .info,.settings,label{
     width: 100%;
     display:flex;
