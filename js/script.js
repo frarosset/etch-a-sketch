@@ -31,6 +31,7 @@ let gridCnt  = document.querySelector('.grid-container');
 let gridDivs; /* Array, generated dynamically */
 
 /* Helper functions */
+
 function removeDescendants(elem){
     while (elem.hasChildNodes()) {
         removeDescendants(elem.lastChild)
@@ -38,11 +39,19 @@ function removeDescendants(elem){
     }
 }
 
-/* Grid creation */
+function setBackgroundColor(elem,color){
+    elem.style.backgroundColor = color;
+}
 
 function setAspectRatio(elem, ar){
     elem.style.aspectRatio = ar;
 }
+
+function setPenColor(color){
+    penColor = color;
+}
+
+/* Grid creation */
 
 function createGrid(gridRows,gridCols){
 
@@ -215,14 +224,6 @@ function updateGridInfo(){
 // In particular, a touch event/sliding or a mouse moving with left buttons pressed 
 // are coded by event.buttons=='1'. There is no need to test for event.pointerType
 
-oneColorSel.addEventListener('input',(e)=>{
-    penColor = oneColorSel.value;
-});
-
-function colorElement(itm,color){
-    itm.style.backgroundColor = color;
-}
-
 function pointerDownCallback(e){
     //console.log("down - release implicit capture");
     e.target.currentColor = penColor;
@@ -234,22 +235,26 @@ function pointerEnterCallback(e){
     if (e.buttons=='1'){
         e.target.currentColor = penColor;
     }
-    colorElement(e.target,penColor);
+    setBackgroundColor(e.target,penColor);
 }
 
 function pointerLeaveCallback(e){
     if (e.buttons=='1'){
         e.target.currentColor = penColor;
     }
-    colorElement(e.target,e.target.currentColor);
+    setBackgroundColor(e.target,e.target.currentColor);
 }
+
+
+
+
 
 
 /* Grid Functions*/
 function clearGrid(){
     gridDivs.forEach(itm =>{
         itm.currentColor = backgroundColor;
-        colorElement(itm,backgroundColor);
+        setBackgroundColor(itm,backgroundColor);
     });
 }
 
@@ -257,6 +262,7 @@ function deleteGrid(){
     removeDescendants(grid);
     gridDivs = [];
 }
+
 
 /* Mode Buttons Functions */
 
@@ -270,12 +276,24 @@ function clickBtnCallback(e){
     selectBtn(e.target);
 }
 
+/* One color mode */
+function oneColorBtnCallback(e){
+    setPenColor(oneColorSel.value);
+}
+
+function oneColorSelCallback(e){
+    setPenColor(oneColorSel.value);
+}
+
+/* Eraser mode */
+function eraserBtnCallback(e){
+    setPenColor(backgroundColor);
+}
+
+/* Clear grid  */
 function clearGridBtnCallback(e){
     clearGrid();
 }
-
-
-
 
 
 
@@ -285,15 +303,22 @@ document.querySelectorAll("button.mutuallyExclusiveBtn").forEach(itm => {
     itm.addEventListener("click", clickBtnCallback)
 });
 
+
+oneColorBtn.addEventListener("click", oneColorBtnCallback);
+oneColorSel.addEventListener('input', oneColorSelCallback);
+
+eraserBtn.addEventListener("click", eraserBtnCallback);
+
 clearGridBtn.addEventListener("click", clearGridBtnCallback);
 
 
-// TODO
-//  oneColorBtn    
+
+
+
+
+// TODO  
 //  randomColorBtn 
-//  gradientBtn    
-//  eraserBtn      
-//  clearGridBtn   
+//  gradientBtn     
 //  newGridBtn     
 
 
