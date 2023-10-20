@@ -1,32 +1,36 @@
 let gridRows = 12;
 let gridCols = 12;
-let keepAR = false;
-let idealAR;
+let keepAR   = false;
+let idealAR  = 1;
+let penColor = 'black';
+let backgroundColor = 'white';
 
-let grid = document.querySelector('.grid');
-let gridCnt = document.querySelector('.grid-container');
+/* DOM elements ---------------------------------------- */
+
+let oneColorBtn    = document.querySelector('#oneColorBtn');
+let randomColorBtn = document.querySelector('#randomColorBtn');
+let gradientBtn    = document.querySelector('#gradientBtn');
+let eraserBtn      = document.querySelector('#eraserBtn');
+let clearGridBtn   = document.querySelector('#clearGridBtn');
+let newGridBtn     = document.querySelector('#newGridBtn');
 
 let nRowsSel = document.querySelector('#nRowsSel');
 let nColsSel = document.querySelector('#nColsSel');
 let nRowsLbl = document.querySelector('#nRowsLbl');
 let nColsLbl = document.querySelector('#nColsLbl');
 
-let keepARSel = document.querySelector('#keepARSel');
+let keepARSel   = document.querySelector('#keepARSel');
 let showGridSel = document.querySelector('#showGridSel');
 let fixedARInfo = document.querySelector('#fixedARInfo');
-let gridInfo = document.querySelector('#gridInfo');
+let gridInfo    = document.querySelector('#gridInfo');
 
 let oneColorSel = document.querySelector('#oneColorSel');
-let penColor = oneColorSel.value;
 
-let gridDivs;
+let grid     = document.querySelector('.grid');
+let gridCnt  = document.querySelector('.grid-container');
+let gridDivs; /* Array, generated dynamically */
 
-/* Grid creation */
-function clearGrid(){
-    removeDescendants(grid);
-    gridDivs = [];
-}
-
+/* Helper functions */
 function removeDescendants(elem){
     while (elem.hasChildNodes()) {
         removeDescendants(elem.lastChild)
@@ -34,13 +38,15 @@ function removeDescendants(elem){
     }
 }
 
+/* Grid creation */
+
 function setAspectRatio(elem, ar){
     elem.style.aspectRatio = ar;
 }
 
 function createGrid(gridRows,gridCols){
 
-    clearGrid();
+    deleteGrid();
 
     let gridAR = gridCols/gridRows;
     let gridCntAR = gridCnt.offsetWidth / gridCnt.offsetHeight;
@@ -80,10 +86,6 @@ function createGrid(gridRows,gridCols){
 
     updateGridInfo();
 }
-
-
-
-createGrid(gridRows,gridCols);
 
 
 /* Settings interface*/
@@ -243,6 +245,62 @@ function pointerLeaveCallback(e){
 }
 
 
+/* Grid Functions*/
+function clearGrid(){
+    gridDivs.forEach(itm =>{
+        itm.currentColor = backgroundColor;
+        colorElement(itm,backgroundColor);
+    });
+}
+
+function deleteGrid(){
+    removeDescendants(grid);
+    gridDivs = [];
+}
+
+/* Mode Buttons Functions */
+
+function selectBtn(btn){
+    currentBtn.classList.remove('activeBtn');
+    currentBtn = btn;
+    currentBtn.classList.add('activeBtn');
+}
+
+function clickBtnCallback(e){
+    selectBtn(e.target);
+}
+
+function clearGridBtnCallback(e){
+    clearGrid();
+}
 
 
 
+
+
+
+/* Add event listeners --------------------------------- */
+
+document.querySelectorAll("button.mutuallyExclusiveBtn").forEach(itm => {
+    itm.addEventListener("click", clickBtnCallback)
+});
+
+clearGridBtn.addEventListener("click", clearGridBtnCallback);
+
+
+// TODO
+//  oneColorBtn    
+//  randomColorBtn 
+//  gradientBtn    
+//  eraserBtn      
+//  clearGridBtn   
+//  newGridBtn     
+
+
+
+
+/* Initialization -------------------------------------- */
+let currentBtn = oneColorBtn;
+selectBtn(oneColorBtn);
+
+createGrid(gridRows,gridCols);

@@ -5,7 +5,9 @@
     --black: rgb(0, 0, 0);
     --grey: rgb(171, 171, 171);
     --white: #f1f1f1;
-    --grid-color: rgb(210, 210, 210);
+    --light-grey: rgb(210, 210, 210);
+    --dark-grey: rgb(120, 120, 120);
+    --accent-color: rgb(93, 192, 60);
 
     /* Font sizes */
     --main-fontsize: 16px;
@@ -24,9 +26,8 @@
     --setting-gap: 6px;
 
     /*Buttons*/
-    --btn-padding: 20px;
+    --btn-padding: 2px;
     --btn-border: 2px;
-    --btn-height: 60px;
 
     /* Maximum column width */
     --col-width: 1024px;
@@ -94,35 +95,32 @@ main{
 header,
 footer{
     border: 1px solid orange;
-} */
-/* .grid-container{
+} 
+.grid-container{
     border: 3px solid teal;
 } */
-.grid{
-    border: 2px solid var(--grid-color); 
+
+/* Header */
+
+h1 {
+    font-family: var(--hdr-font), sans-serif;
+    font-size: var(--hdr-fontsize);    
+    padding: var(--hdr-padding);
 }
 
 /* Footer */
 footer{
-    background-color: var(--grid-color);
+    background-color: var(--light-grey);
     color: var(--black);
     font-family: var(--ftr-font), sans-serif;
     font-size: var(--ftr-fontsize);
     font-weight: 400;
     line-height: 1.2;
-    padding: var(--ftr-padding);    
+    padding: var(--ftr-padding);  
 }
 footer i{
     font-size: 1.3em;    
 }
-
-
-/* Header */
-
-h1 {
-    padding: var(--hdr-padding);
-}
-
 
 /* Grid */
 
@@ -133,6 +131,7 @@ h1 {
     flex-direction: column;
     align-items: stretch;
     box-sizing: content-box;
+    border: 2px solid var(--light-grey); 
 }
 
 .rowOfGrid {
@@ -143,12 +142,13 @@ h1 {
 }
 
 .showGrid {
-    outline: 1px solid var(--grid-color);
+    outline: 1px solid var(--light-grey);
 }
 
 .elemOfGrid {
     flex: 1 1 0;
     aspect-ratio: 1/1;
+    touch-action: none;    
 }
 
 /******/
@@ -163,6 +163,18 @@ h1 {
     display:flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: var(--setting-gap);
+}
+
+.settings{
+    justify-content: center;
+}
+
+.mode-settings{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--setting-gap);   
 }
 
 .grid-settings{
@@ -192,8 +204,26 @@ h1 {
     user-select: none;
 }
 
-.elemOfGrid
-{
-   touch-action: none;
+/* Buttons */
+button{
+    padding: var(--btn-padding);
+    border: none;
+    background-color: var(--light-grey);
+    outline: 0 solid var(--light-grey);
+    color: var(--black);
+    text-align: center;
+    font-size: 16px;
+    border-radius: 8px;
+    transition-duration: 0.3s;
 }
 
+button:hover{
+    background-color: var(--white);
+    outline: var(--btn-border) solid var(--light-grey);
+}
+
+button:active,
+button.activeBtn{
+    background-color: var(--accent-color);
+    outline: var(--btn-border) solid var(--accent-color);
+}
