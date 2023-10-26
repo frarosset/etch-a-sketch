@@ -2,8 +2,9 @@
 
 :root {
     /* Colors */
+    --pure-black: rgb(0, 0, 0);
+    --pure-white: rgb(255, 255, 255);
     --black: rgb(0, 0, 0);
-    --grey: rgb(171, 171, 171);
     --white: #f1f1f1;
     --light-grey: rgb(210, 210, 210);
     --dark-grey: rgb(120, 120, 120);
@@ -23,11 +24,13 @@
     --main-padding: 10px;
     --hdr-padding: 10px;
     --ftr-padding: 5px;
-    --setting-gap: 6px;
+    --setting-gap: 12px;
 
     /*Buttons*/
     --btn-padding: 2px;
     --btn-border: 2px;
+    --btn-fontsize: 16px;
+    --btn-radius: 8px;
 
     /* Maximum column width */
     --col-width: 1024px;
@@ -53,8 +56,10 @@ html {
 
 body {
     margin: 0 auto;
-    height: 100vh; /*it is assumed the same for <html>*/
-    width: 100%;   /* or max-width -- this avoids horizontal scroll bars */
+    height: 100vh;
+    /*it is assumed the same for <html>*/
+    width: 100%;
+    /* or max-width -- this avoids horizontal scroll bars */
 }
 
 main,
@@ -68,61 +73,156 @@ main {
     max-width: var(--col-width);
 }
 
-/* custom style */
-
 body,
 main,
 header,
-footer,
-.grid-container {
+footer {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-main{
+main {
     flex: 1;
 }
 
-.grid-container{
-    width:100%;
-    height: 100%;
-    flex:1;
+/* || UTILITIES */
+
+.hidden {
+    visibility: hidden !important;
 }
 
-/*Debug borders*/
-/* main,
-header,
-footer{
-    border: 1px solid orange;
-} 
-.grid-container{
-    border: 3px solid teal;
-} */
+.removed {
+    display: none !important;
+}
 
-/* Header */
+.nobullets {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.unselectable {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* CUSTOM STYLE */
+
+/* || Buttons */
+button {
+    padding: var(--btn-padding);
+    border: none;
+    border-radius: var(--btn-radius);
+    outline: 0 solid var(--light-grey);
+    background-color: var(--light-grey);
+    color: var(--black);
+    text-align: center;
+    font-size: var(--btn-fontsize);
+    transition-duration: 0.3s;
+}
+
+button:hover {
+    background-color: var(--white);
+    outline: var(--btn-border) solid var(--light-grey);
+}
+
+button:active,
+button.activeBtn {
+    background-color: var(--accent-color);
+    outline: var(--btn-border) solid var(--accent-color);
+}
+
+/* || noUIslider*/
+/* see https://refreshless.com/nouislider/more/#section-styling */
+/* The length are harcoded in pixels and should be modified the least possible*/
+.noUi-target {
+    width: 80%;
+    max-width: 400px;
+    margin: 35px 25px 10px;
+    background-color: var(--accent-color);
+}
+
+.noUi-connect {
+    /* The non-selected interval*/
+    background-color: var(--light-grey);
+    /*opacity: 0.9;*/
+}
+
+.noUi-connect,
+.noUi-target {
+    border-radius: var(--btn-radius) !important;
+}
+
+.noUi-handle {
+    border-width: 0;
+    border-radius: 50%;
+    width: 28px !important;
+    right: -14px !important;
+    /*  must be (width / 2) * -1 */
+    /* DEFAULT VALUES in noUIsliders ARE:
+    width: 34px;
+    height: 28px;
+    top: -6px;
+    left: auto;
+    right: -17px; /* The 17 here is half of the 34 width. The - pulls it in the other direction */
+}
+
+.noUi-tooltip {
+    padding: 1px 5px;
+}
+
+.noUi-handle::before,
+.noUi-handle::after {
+    display: none;
+    /* Hide markers on slider handles */
+}
+
+/* https://refreshless.com/nouislider/examples/#section-toggle */
+
+/* .noUi-input divs include a .noUi-target and a .noUi-label div */
+/* .noUi-input and .noUi-label divs are created here, and not part of the noUIslider library */
+.noUi-input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* || Header */
 
 h1 {
     font-family: var(--hdr-font), sans-serif;
-    font-size: var(--hdr-fontsize);    
+    font-size: var(--hdr-fontsize);
     padding: var(--hdr-padding);
 }
 
-/* Footer */
-footer{
+/* || Footer */
+footer {
     background-color: var(--light-grey);
     color: var(--black);
     font-family: var(--ftr-font), sans-serif;
     font-size: var(--ftr-fontsize);
     font-weight: 400;
     line-height: 1.2;
-    padding: var(--ftr-padding);  
-}
-footer i{
-    font-size: 1.3em;    
+    padding: var(--ftr-padding);
 }
 
-/* Grid */
+footer i {
+    font-size: 1.3em;
+}
+
+/* || Grid */
+
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    padding: var(--main-padding);
+}
 
 .grid {
     flex: 1;
@@ -131,7 +231,7 @@ footer i{
     flex-direction: column;
     align-items: stretch;
     box-sizing: content-box;
-    border: 2px solid var(--light-grey); 
+    border: 2px solid var(--light-grey);
 }
 
 .rowOfGrid {
@@ -141,89 +241,102 @@ footer i{
     align-items: stretch;
 }
 
+.cellOfGrid {
+    flex: 1 1 0;
+    aspect-ratio: 1/1;
+    touch-action: none;
+}
+
 .showGrid {
     outline: 1px solid var(--light-grey);
 }
 
-.cellOfGrid {
-    flex: 1 1 0;
-    aspect-ratio: 1/1;
-    touch-action: none;    
-}
-
 /******/
 
-.settings,
-.info{
+#settings {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
     padding: var(--main-padding);
+    gap: var(--setting-gap);
 }
 
-.info,.settings,label{
+#settings>* {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--setting-gap);
+}
+
+.selectors {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--setting-gap);
+}
+
+.info,
+.range-preview {
+    width: 100%;
+    max-height: 70px;
+    min-height: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border: 1px solid var(--light-grey);
+    border-radius: var(--btn-radius);
+    overflow: hidden;
+}
+
+.info {
+    align-items: center;
+    padding: 0 var(--setting-gap);
+    gap: var(--setting-gap);
+}
+
+.info>*,
+.selectors>* {
+    flex: 1;
+}
+
+.range-preview {
+    align-items: stretch;
+}
+
+/* || Settings Buttons specific settings*/
+#btnSettings {
+    flex-direction: row;
+    flex: none;
+}
+
+#btnSettings>* {
+    flex: 1;
+}
+
+/* TODO */
+
+
+/* label{
     width: 100%;
     display:flex;
     flex-direction: row;
     justify-content: space-between;
     gap: var(--setting-gap);
 }
+ */
 
-.settings{
-    justify-content: center;
-}
 
-.mode-settings{
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: var(--setting-gap);   
-}
-
-.grid-settings{
-    display:flex;
-    flex-direction: column;
-    gap: var(--setting-gap);
-}
-
-.slider{
+.slider {
     height: 16px;
-    border-radius: 8px;
+    border-radius: var(--btn-radius);
     appearance: none;
-    background: #d3d3d3;
+    background: var(--light-grey);
     outline: none;
 }
 
-.slider-toggle{
+.slider-toggle {
     width: 32px;
-}
-
-.info>div{
-    flex:1;
-}
-
-.unselectable {
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-/* Buttons */
-button{
-    padding: var(--btn-padding);
-    border: none;
-    background-color: var(--light-grey);
-    outline: 0 solid var(--light-grey);
-    color: var(--black);
-    text-align: center;
-    font-size: 16px;
-    border-radius: 8px;
-    transition-duration: 0.3s;
-}
-
-button:hover{
-    background-color: var(--white);
-    outline: var(--btn-border) solid var(--light-grey);
-}
-
-button:active,
-button.activeBtn{
-    background-color: var(--accent-color);
-    outline: var(--btn-border) solid var(--accent-color);
 }

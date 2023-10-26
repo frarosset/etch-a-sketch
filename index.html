@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etch-a-Sketch</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js" integrity="sha512-UOJe4paV6hYWBnS0c9GnIRH8PLm2nFK22uhfAvsTIqd3uwnWsVri1OPn5fJYdLtGY3wB11LGHJ4yPU1WFJeBYQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" integrity="sha512-qveKnGrvOChbSzAdtSs8p69eoLegyh+1hwOMbmpCViIwj7rn4oJjdmMvWOuyQlTOZgTlZA0N2PXA7iA8/2TUYA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="stylesheet" href="./css/style.css">
     <script src="./js/script.js" defer></script>    
 </head>
@@ -13,32 +15,44 @@
         <h1>Etch-a-Sketch</h1>
     </header>
     <main>
-        <div class="settings">
-            <div class="mode-settings">
-                <button type='button' id="oneColorBtn" class="mutuallyExclusiveBtn">One Color Draw</button>
-                <button type='button' id="randomColorBtn" class="mutuallyExclusiveBtn">Random Color Draw</button>
-                <button type='button' id="gradientBtn" class="mutuallyExclusiveBtn">Apply Gradient</button>
+        <div id="settings">
+            <div id="btnSettings">
+                <button type='button' id="oneColorBtn" class="mutuallyExclusiveBtn">One Color</button>
+                <button type='button' id="randomColorBtn" class="mutuallyExclusiveBtn">Random Color</button>
+                <button type='button' id="fadeBtn" class="mutuallyExclusiveBtn">Fade</button>
                 <button type='button' id="eraserBtn" class="mutuallyExclusiveBtn">Eraser</button>
                 <button type='button' id="clearGridBtn">Clear grid</button>
                 <button type='button' id="newGridBtn" class="mutuallyExclusiveBtn">New grid</button>
             </div>            
-            <div class="grid-settings">
-                <div>
-                    <label for="nRowsSel" class="unselectable">Rows:<span id="nRowsLbl"></span></label>
-                    <input type="range" min="1" max="120" value="20" class="slider" id="nRowsSel">
+            <div id="newGridBtnSettings">
+                <div class="selectors">
+                    <div>
+                        <label for="nRowsSel" class="unselectable">Rows:<span id="nRowsLbl"></span></label>
+                        <input type="range" min="1" max="120" value="20" class="slider" id="nRowsSel">
+                    </div>
+                    <div>
+                        <label for="nColsSel" class="unselectable">Columns:<span id="nColsLbl"></span></label>
+                        <input type="range" min="1" max="120" value="20" class="slider" id="nColsSel">
+                    </div>
+                    <label for="keepARSel" class="unselectable">Keep AR<input type="range" min="0" max="1" value="0" class="slider slider-toggle" id="keepARSel"></label>
+                    <label for="showGridSel" class="unselectable">Show Grid<input type="range" min="0" max="1" value="0" class="slider slider-toggle" id="showGridSel"></label>
                 </div>
-                <div>
-                    <label for="nColsSel" class="unselectable">Columns:<span id="nColsLbl"></span></label>
-                    <input type="range" min="1" max="120" value="20" class="slider" id="nColsSel">
+                <div class="info">
+                    <div>Grid: <span id="gridInfo"></span></div>
+                    <div>Fixed AR: <span id="fixedARInfo"></span></div>
                 </div>
-                <label for="keepARSel" class="unselectable">Keep AR<input type="range" min="0" max="1" value="0" class="slider slider-toggle" id="keepARSel"></label>
-                <label for="showGridSel" class="unselectable">Show Grid<input type="range" min="0" max="1" value="0" class="slider slider-toggle" id="showGridSel"></label>
             </div>
-            <div class="onecolor-settings">
+            <div id="oneColorBtnSettings">
                 <div>
-                    <label for="oneColorSel" class="unselectable">Color <input type="color" id="oneColorSel" value="#000000"></label>
-                    
+                    <label for="oneColorSel" class="unselectable">
+                        Color 
+                        <input type="color" id="oneColorSel" value="#000000">
+                    </label> 
                 </div>
+            </div>
+            <div id="randomColorBtnSettings">
+                <div class="selectors"></div>
+                <div class="range-preview"></div>
             </div>
         </div>
         <!-- The following container is a flexbox, which is needed to make 
@@ -52,10 +66,6 @@
         -->
         <div class="grid-container">
             <div class="grid"></div>
-        </div>
-        <div class="info">
-            <div>Grid: <span id="gridInfo"></span></div>
-            <div>Fixed AR: <span id="fixedARInfo"></span></div>
         </div>
     </main>
     <footer>
