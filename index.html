@@ -28,11 +28,11 @@
                 <div class="selectors">
                     <div>
                         <label for="nRowsSel" class="unselectable">Rows:<span id="nRowsLbl"></span></label>
-                        <input type="range" min="1" max="120" value="20" class="slider" id="nRowsSel">
+                        <input type="range" min="1" max="100" value="20" class="slider" id="nRowsSel">
                     </div>
                     <div>
                         <label for="nColsSel" class="unselectable">Columns:<span id="nColsLbl"></span></label>
-                        <input type="range" min="1" max="120" value="20" class="slider" id="nColsSel">
+                        <input type="range" min="1" max="100" value="20" class="slider" id="nColsSel">
                     </div>
                     <label for="keepARSel" class="unselectable">Keep AR<input type="range" min="0" max="1" value="0" class="slider slider-toggle" id="keepARSel"></label>
                     <label for="showGridSel" class="unselectable">Show Grid<input type="range" min="0" max="1" value="0" class="slider slider-toggle" id="showGridSel"></label>
@@ -43,10 +43,12 @@
                 </div>
             </div>
             <div id="oneColorBtnSettings">
-                <div>
-                    <label for="oneColorSel" class="unselectable">
-                        Color 
-                        <input type="color" id="oneColorSel" value="#000000">
+                <div class="selectors">
+                    <label for="oneColorSel" class="unselectable"> 
+                        <div class="color-pick">
+                            <input type="color" id="oneColorSel" value="#000000">
+                        </div>
+                        Color
                     </label> 
                 </div>
             </div>
@@ -54,6 +56,29 @@
                 <div class="selectors"></div>
                 <div class="range-preview"></div>
             </div>
+            <div id="randomColorBtnSettings">
+                <div class="selectors">
+                    <label for="fromFadeColorSel" class="unselectable"> 
+                        <div class="color-pick">
+                            <input type="color" id="fromFadeColorSel" value="#FFFFFF">
+                        </div>
+                        From this...
+                    </label> 
+                    <label for="toFadeColorSel" class="unselectable"> 
+                        <div class="color-pick">
+                            <input type="color" id="toFadeColorSel" value="#000000">
+                        </div>
+                        ... to this
+                    </label>
+                    <div class="noUi-input">
+                        <div id="fracFadeSel">
+                        </div>
+                        <div class="noUi-label">
+                        Step Percentage
+                        </div>
+                    </div>
+                </div>
+            </div>            
         </div>
         <!-- The following container is a flexbox, which is needed to make 
              the grid occupy the entire space left in the main, while also
