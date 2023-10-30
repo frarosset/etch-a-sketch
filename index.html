@@ -17,14 +17,14 @@
     <main>
         <div id="settings">
             <div id="btnSettings">
-                <button type='button' id="oneColorBtn" class="mutuallyExclusiveBtn">One Color</button>
-                <button type='button' id="randomColorBtn" class="mutuallyExclusiveBtn">Random Color</button>
-                <button type='button' id="fadeColorBtn" class="mutuallyExclusiveBtn">Fade</button>
-                <button type='button' id="eraserBtn" class="mutuallyExclusiveBtn">Eraser</button>
+                <button type='button' id="oneColorBtn" class="mutuallyExclusiveBtn" data-associated-settings-id = "oneColorBtnSettings">One Color</button>
+                <button type='button' id="randomColorBtn" class="mutuallyExclusiveBtn" data-associated-settings-id = "randomColorBtnSettings">Random Color</button>
+                <button type='button' id="fadeColorBtn" class="mutuallyExclusiveBtn" data-associated-settings-id = "fadeColorBtnSettings">Fade</button>
+                <button type='button' id="eraserBtn" class="mutuallyExclusiveBtn" data-associated-settings-id = "eraserBtnSettings">Eraser</button>
                 <button type='button' id="clearGridBtn">Clear grid</button>
-                <button type='button' id="newGridBtn" class="mutuallyExclusiveBtn">New grid</button>
+                <button type='button' id="newGridBtn" class="mutuallyExclusiveBtn" data-associated-settings-id = "newGridBtnSettings">New grid</button>
             </div>            
-            <div id="newGridBtnSettings">
+            <div id="newGridBtnSettings" class="removed">
                 <div class="selectors">
                     <div>
                         <label for="nRowsSel" class="unselectable">Rows:<span id="nRowsLbl"></span></label>
@@ -42,7 +42,7 @@
                     <div>Fixed AR: <span id="fixedARInfo"></span></div>
                 </div>
             </div>
-            <div id="oneColorBtnSettings">
+            <div id="oneColorBtnSettings" class="removed">
                 <div class="selectors">
                     <label for="oneColorSel" class="unselectable"> 
                         <div class="color-pick">
@@ -51,12 +51,13 @@
                         Color
                     </label> 
                 </div>
+                <div class="info"></div>
             </div>
-            <div id="randomColorBtnSettings">
+            <div id="randomColorBtnSettings" class="removed">
                 <div class="selectors"></div>
                 <div class="range-preview"></div>
             </div>
-            <div id="randomColorBtnSettings">
+            <div id="fadeColorBtnSettings" class="removed">
                 <div class="selectors">
                     <label for="fromFadeColorSel" class="unselectable"> 
                         <div class="color-pick">
@@ -78,7 +79,12 @@
                         </div>
                     </div>
                 </div>
-            </div>            
+                <div class="info"></div>
+            </div> 
+            <div id="eraserBtnSettings" class="removed">
+                <div class="selectors"></div>
+                <div class="info"></div>
+            </div>      
         </div>
         <!-- The following container is a flexbox, which is needed to make 
              the grid occupy the entire space left in the main, while also

@@ -296,6 +296,7 @@ footer i {
     justify-content: space-between;
     align-items: center;
     gap: var(--setting-gap);
+    height: 82.17px;
 }
 
 .info,

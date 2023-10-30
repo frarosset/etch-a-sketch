@@ -278,9 +278,9 @@ function updateGridInfo(){
 
 /* Grid Functions */
 function clearGrid(){
-    gridDivs.forEach(itm =>{
-        itm.currentColor = backgroundColor;
-        setBackgroundColor(itm,backgroundColor);
+    gridDivs.forEach(cell =>{
+        cell.currentColor = backgroundColor;
+        setBackgroundColor(cell,backgroundColor);
     });
 }
 
@@ -400,8 +400,13 @@ function pointerLeaveCallback(e){
 
 function selectBtn(btn){
     currentBtn.classList.remove('activeBtn');
+    //document.getElementById(currentBtn.dataset.associatedSettingsId).classList.add('removed');
+    currentBtn.associatedSettings.classList.add('removed');
     currentBtn = btn;
     currentBtn.classList.add('activeBtn');
+    //document.getElementById(currentBtn.dataset.associatedSettingsId).classList.remove('removed');
+    currentBtn.associatedSettings.classList.remove('removed');
+
     // the next function set setCurrentFadeColor() and updateCurrentFadeColor() 
     // depending on the mode (they are non-empty only in fade mode)
     setFadeColorFunctions();
@@ -495,7 +500,10 @@ function clearGridBtnCallback(e){
 /* Add event listeners --------------------------------- */
 
 document.querySelectorAll("button.mutuallyExclusiveBtn").forEach(itm => {
-    itm.addEventListener("click", clickBtnCallback)
+    itm.addEventListener("click", clickBtnCallback);
+    // itm.dataset can only store strings... so add an attribute with the associated object,
+    // to avoid calling querySelector multiple times
+    itm.associatedSettings = document.querySelector('#'+itm.dataset.associatedSettingsId);
 });
 
 
@@ -517,25 +525,6 @@ clearGridBtn.addEventListener("click", clearGridBtnCallback);
 
 // TODO     
 //  newGridBtn     
-
-
-
-
-/* Initialization -------------------------------------- */
-let currentBtn = oneColorBtn;
-selectBtn(oneColorBtn);
-
-createGrid(gridRows,gridCols);
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -938,3 +927,8 @@ function initFadeSettings(){
 
 initRandomColorSettings();
 initFadeSettings();
+
+let currentBtn = oneColorBtn;
+selectBtn(oneColorBtn);
+
+createGrid(gridRows,gridCols);
