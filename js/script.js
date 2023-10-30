@@ -8,7 +8,7 @@ let backgroundColor = 'white';
 let toFadeColor;
 let fromFadeColor;
 let fracFade=0.1;
-let currentFadeIndex;
+let currentFadeIndexList;
 let updateCurrentFadeColor; /* function set by the setFadeColorFunctions()*/
 let setCurrentFadeColor;/* function set by the setFadeColorFunctions()*/
 
@@ -344,33 +344,45 @@ function deleteGrid(){
 // toward the goal color (toFadeColor). The color of the gradient at step k is 
 // computed by mixing fromFadeColor with toFadeColor with a percentage of 
 // min(fracFade*k,1)
-// Todo: In fade mode, multitouch is currently not tested, but should be broken.
-//       currentFadeIndex should be defined for every different e.pointerId.
+//
+// In fade mode, when multi-touch is supported, when sliding occurs simultaneously 
+// in multiple points, each different touch/slide must have its own gradient. A 
+// global list of variables currentFadeIndexList is introduced, whose elements refer 
+// to the index of the gradient for different pointers. Recall that given a pointer 
+// event, e.g., a touch followed by a slide, a unique id is assigned to it.
+// currentFadeIndexList is implemented as an object whose indices are indeed the ids
+// of such pointers (retrieved from event.PointerId, within the pointer events callbacks).
+// currentFadeIndexList is reset to an empty object each time the mode changes or changes 
+// occurs to the fade settings, to limit the size currentFadeIndexList. 
 
 function pointerDownCallback(e){
 
     let cell = e.target;
-    cell.releasePointerCapture(e.pointerId); // Important! (see above)
-    console.log('down ',currentFadeIndex,e.pointerId);
+    let ptrId = e.pointerId;
+    cell.releasePointerCapture(ptrId); // Important! (see above)
+    console.log('down ',ptrId,currentFadeIndexList);
+
     if (cell.colorSetOnEnterOrDown){
         if (e.pointerType === 'mouse'){
-            updateCurrentFadeColor();
+            updateCurrentFadeColor(ptrId);
         } else {
-            setCurrentFadeColor();
+            setCurrentFadeColor(ptrId);
         }
-        cell.currentColor = penColor();
+        cell.currentColor = penColor(ptrId);
     } else {
-        setCurrentFadeColor();
+        setCurrentFadeColor(ptrId);
         cell.currentColor = getBackgroundColor(cell);
         cell.colorSetOnEnterOrDown = true;    
     }
     setBackgroundColor(cell,cell.currentColor);
 }
 
-function pointerEnterCallback(e){
-    console.log('enter',currentFadeIndex,e.pointerId);    
+function pointerEnterCallback(e){     
     let cell = e.target;
-    let color = penColor();
+    let ptrId = e.pointerId;
+    console.log('enter',ptrId,currentFadeIndexList); 
+
+    let color = penColor(ptrId);
     if (e.buttons=='1'){
         // mouse enters with (only) left button pressed or touch slide-in
         cell.currentColor = color;
@@ -384,13 +396,14 @@ function pointerEnterCallback(e){
 
 function pointerLeaveCallback(e){
     let cell = e.target;
-    console.log('leave',currentFadeIndex,e.pointerId);
+    let ptrId = e.pointerId;
+    console.log('leave',ptrId,currentFadeIndexList);
     cell.colorSetOnEnterOrDown = false;
     setBackgroundColor(cell,cell.currentColor);
     if (e.buttons!='1'){
-        setCurrentFadeColor();
+        setCurrentFadeColor(ptrId);
     } else {
-        updateCurrentFadeColor();
+        updateCurrentFadeColor(ptrId);
     }
 
     console.log('');    
@@ -402,6 +415,10 @@ function selectBtn(btn){
     currentBtn.classList.remove('activeBtn');
     //document.getElementById(currentBtn.dataset.associatedSettingsId).classList.add('removed');
     currentBtn.associatedSettings.classList.add('removed');
+    if (currentBtn === fadeColorBtn || btn === fadeColorBtn){
+        resetCurrentFadeIndexList(); /* Empty the pointers list */
+    }
+
     currentBtn = btn;
     currentBtn.classList.add('activeBtn');
     //document.getElementById(currentBtn.dataset.associatedSettingsId).classList.remove('removed');
@@ -457,31 +474,34 @@ function setFadeColorFunctions(){
     }
 }
 
-function setCurrentFadeColor_enabled(){
-    currentFadeIndex = 0;
-    console.log('   (RESET IDX TO ', currentFadeIndex,')'); /* debug */   
+function resetCurrentFadeIndexList(){
+    currentFadeIndexList = {};
 }
 
-function updateCurrentFadeColor_enabled(){
-    currentFadeIndex++;
-    console.log('   (UPDATE IDX TO ', currentFadeIndex,')'); /* debug */   
+function setCurrentFadeColor_enabled(ptrId){
+    currentFadeIndexList[ptrId]=0;
+    console.log('   (RESET IDX TO ', currentFadeIndexList[ptrId],')'); /* debug */   
 }
 
-function cssFadeColor(){
+function updateCurrentFadeColor_enabled(ptrId){
+    currentFadeIndexList[ptrId]++;
+    console.log('   (UPDATE IDX TO ', currentFadeIndexList[ptrId],')'); /* debug */  
+}
+
+function cssFadeColor(ptrId){
     // This adds to the current fade color the same amout at every step
-    let currentFrac = Math.min(currentFadeIndex*fracFade,1);
+    let currentFrac = Math.min(currentFadeIndexList[ptrId]*fracFade,1);
 
     let currentFadeColor = fromFadeColor.map((itm,idx) =>
         Math.round(itm*(1-currentFrac) + toFadeColor[idx]*currentFrac)
     );
 
-    //console.log(currentFadeColor,currentFadeIndex); /* debug */     
+    //console.log(currentFadeColor,currentFadeIndexList[ptrId]); /* debug */     
 
     return cssRGBColor(currentFadeColor);
 }
 
 function fadeColorBtnCallback(e){
-    setCurrentFadeColor_enabled();
     setPenColor(cssFadeColor);
 }
 
@@ -730,14 +750,17 @@ function setToFadeColor(colorInput){
 }
 
 function setFromFadeColorCallback(e){
+    resetCurrentFadeIndexList();
     setFromFadeColor(e.target);
 }
 
 function setToFadeColorCallback(e){
+    resetCurrentFadeIndexList();
     setToFadeColor(e.target);
 }
 
 function setFracFadeCallback(values, handle, unencoded){
+    resetCurrentFadeIndexList();
     fracFade = unencoded/100;
 }
 
