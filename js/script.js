@@ -88,6 +88,12 @@ function thisAsFcn(variable){
     return ()=>variable;
 }
 
+function RGB2array(cssRGB){
+    // regex from: https://stackoverflow.com/questions/9585973/javascript-regular-expression-for-rgb-values
+    let rgbArray = cssRGB.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).splice(1,3);
+    return rgbArray;
+}
+
 function hex2RGB(hex){
     let rgbArray = [];
     // skipindex 0, which is the '#' symbol
@@ -371,9 +377,9 @@ function pointerDownCallback(e){
             setCurrentFadeColor(ptrId);
         } else {
             console.log(`Successive ${e.pointerType.toUpperCase()} down in this cell`);
-            updateCurrentFadeColor(ptrId);
+            updateCurrentFadeColor(ptrId,cell);
         }
-        cell.currentColor = penColor(ptrId);
+        cell.currentColor = penColor(ptrId,cell);
     } else {
         console.log(`New ${e.pointerType.toUpperCase()} down in this cell (NO COLOR SET)`);
         setCurrentFadeColor(ptrId);
@@ -398,7 +404,7 @@ function pointerEnterCallback(e){
             setCurrentFadeColor(ptrId);
     }
 
-    let color = penColor(ptrId);
+    let color = penColor(ptrId,cell);
     if (e.buttons=='1'){
         // mouse enters with (only) left button pressed or touch slide-in
         cell.currentColor = color;
@@ -424,7 +430,7 @@ function pointerLeaveCallback(e){
         }
         setCurrentFadeColor(ptrId);
     } else {
-        updateCurrentFadeColor(ptrId);
+        updateCurrentFadeColor(ptrId,cell);
     }
 
     console.log('');    
@@ -487,8 +493,15 @@ function randomColorBtnCallback(e){
 //  This function will be called when a new mode is set, e.g., in  selectBtn(btn)
 function setFadeColorFunctions(){
     if (currentBtn===fadeColorBtn){
-        updateCurrentFadeColor = updateCurrentFadeColor_enabled;
-        setCurrentFadeColor = setCurrentFadeColor_enabled;
+        if (document.querySelector('#fromFadeMode').noUiSlider.get(true)==1){
+            updateCurrentFadeColor = updateCurrentFadeColorFromCellColor_enabled;
+            setCurrentFadeColor = () => {};
+            console.log('cell')
+        } else {
+            updateCurrentFadeColor = updateCurrentFadeColorFromCustomColor_enabled;
+            setCurrentFadeColor = setCurrentFadeColorFromCustomColor_enabled;
+            console.log('custom')
+        }
     } else {
         updateCurrentFadeColor = () => {};
         setCurrentFadeColor = () => {};
@@ -499,17 +512,30 @@ function resetCurrentFadeIndexList(){
     currentFadeIndexList = {};
 }
 
-function setCurrentFadeColor_enabled(ptrId,val=0){
+function initCellsFadeData(){
+    gridDivs.forEach(itm =>{
+        itm.fadeIndex = 1;
+        itm.fromFadeColor = RGB2array(itm.style.backgroundColor);
+    });
+}
+
+
+function updateCurrentFadeColorFromCellColor_enabled(ptrId,cell){
+    cell.fadeIndex++;
+    console.log('   (UPDATE cell IDX TO ', cell.fadeIndex,')'); /* debug */  
+}
+
+function setCurrentFadeColorFromCustomColor_enabled(ptrId,val=0){
     currentFadeIndexList[ptrId]=val;
     console.log('   (RESET IDX TO ', currentFadeIndexList[ptrId],')'); /* debug */   
 }
 
-function updateCurrentFadeColor_enabled(ptrId){
+function updateCurrentFadeColorFromCustomColor_enabled(ptrId){
     currentFadeIndexList[ptrId]++;
     console.log('   (UPDATE IDX TO ', currentFadeIndexList[ptrId],')'); /* debug */  
 }
 
-function cssFadeColor(ptrId){
+function cssFadeColorFromCustomColor(ptrId){
     // This adds to the current fade color the same amout at every step
     let currentFrac = Math.min(currentFadeIndexList[ptrId]*fracFade,1);
 
@@ -522,10 +548,52 @@ function cssFadeColor(ptrId){
     return cssRGBColor(currentFadeColor);
 }
 
-function fadeColorBtnCallback(e){
-    setPenColor(cssFadeColor);
+function cssFadeColorFromCellColor(ptrId,cell){
+    // This adds to the current fade color the same amout at every step
+    let currentFrac = Math.min(cell.fadeIndex*fracFade,1);
+
+    let currentFadeColor = cell.fromFadeColor.map((itm,idx) =>
+        Math.round(itm*(1-currentFrac) + toFadeColor[idx]*currentFrac)
+    );
+
+    //console.log(currentFadeColor,currentFadeIndexList[ptrId]); /* debug */     
+
+    return cssRGBColor(currentFadeColor);
 }
 
+function fadeColorBtnCallback(e){
+    console.log(document.querySelector('#fromFadeMode').noUiSlider.get(true))
+    if (document.querySelector('#fromFadeMode').noUiSlider.get(true)==1){
+        // mode 1: frame from cell color
+        resetCurrentFadeIndexList();
+        initCellsFadeData();
+        setPenColor(cssFadeColorFromCellColor);
+    } else {
+        // mode 0: fade from fixed color
+        resetCurrentFadeIndexList();
+        initCellsFadeData();
+        setPenColor(cssFadeColorFromCustomColor);
+    }
+}
+
+function fadeModeToggleCallback(values, handle, unencoded){
+    setFadeColorFunctions();
+    if (unencoded==1){
+        // mode 1: frame from cell color
+        this.target.associatedSelector.classList.add('hidden');
+
+        resetCurrentFadeIndexList();
+        initCellsFadeData();
+        setPenColor(cssFadeColorFromCellColor);
+    } else {
+        // mode 0: fade from fixed color
+        this.target.associatedSelector.classList.remove('hidden');
+
+        resetCurrentFadeIndexList();
+        initCellsFadeData();
+        setPenColor(cssFadeColorFromCustomColor);
+    }
+}
 
 /* Eraser mode */
 function eraserBtnCallback(e){
@@ -535,6 +603,9 @@ function eraserBtnCallback(e){
 /* Clear grid  */
 function clearGridBtnCallback(e){
     clearGrid();
+    resetCurrentFadeIndexList();
+    initCellsFadeData(); // after clearing the grid
+
 }
 
 
@@ -785,24 +856,17 @@ function setFromFadeColorCallback(e){
 }
 
 function setToFadeColorCallback(e){
+    initCellsFadeData();
     resetCurrentFadeIndexList();
     setToFadeColor(e.target);
 }
 
 function setFracFadeCallback(values, handle, unencoded){
+    initCellsFadeData();
     resetCurrentFadeIndexList();
     fracFade = unencoded/100;
 }
 
-function fromFadeModeCallback(values, handle, unencoded){
-    if (unencoded==1){
-        // mode 1: frame from cell color
-        this.target.associatedSelector.classList.add('hidden');
-    } else {
-        // mode 0: fade from fixed color
-        this.target.associatedSelector.classList.remove('hidden');
-    }
-}
 
 /* Initializaton Function and data */
 
@@ -991,8 +1055,7 @@ function initFadeSettings(){
 
     if (fromFadeModeStart)
         fromFadeMode.associatedSelector.classList.add('hidden');
-    fromFadeMode.noUiSlider.on('set',fromFadeModeCallback);
-
+    fromFadeMode.noUiSlider.on('set',fadeModeToggleCallback);
 
     let fracFadeStep = 0.1;
     let sliderOptions = getSliderOptions(fracFade*100,'percentage',fracFadeStep);

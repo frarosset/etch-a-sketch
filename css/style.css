@@ -24,7 +24,7 @@
     --main-padding: 10px;
     --hdr-padding: 10px;
     --ftr-padding: 5px;
-    --setting-gap: 12px;
+    --setting-gap: 8px;
 
     /*Buttons*/
     --btn-padding: 2px;
@@ -217,6 +217,7 @@ input[type='color'] {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
 }
 
 /* || Header */
