@@ -10,7 +10,7 @@ let fromFadeColor;
 let fracFade=0.1;
 let currentFadeIndexList = [];
 let updateCurrentFadeColor; /* function set by the setFadeColorFunctions()*/
-let setCurrentFadeColor;/* function set by the setFadeColorFunctions()*/
+let setCurrentFadeColor; /* function set by the setFadeColorFunctions()*/
 let downCell = -1;
 let downIndex;
 
@@ -683,6 +683,15 @@ function PercentageToNumber(string){
     return Number(string.replace('%', ''));
 }
 
+function NumberToToggleLabel(number){
+    return number==0?'false':'true';
+}
+
+function ToggleLabelToNumber(string){
+    return string=='false'?0:1;
+}
+
+
 function setConnectForCircularData(rangeConnectDivArray,selectedRange){
     //rangeConnect is a 3-element array
     if (selectedRange[0]<=selectedRange[1]){
@@ -785,6 +794,16 @@ function setFracFadeCallback(values, handle, unencoded){
     fracFade = unencoded/100;
 }
 
+function fromFadeModeCallback(values, handle, unencoded){
+    if (unencoded==1){
+        // mode 1: frame from cell color
+        this.target.associatedSelector.classList.add('hidden');
+    } else {
+        // mode 0: fade from fixed color
+        this.target.associatedSelector.classList.remove('hidden');
+    }
+}
+
 /* Initializaton Function and data */
 
 const colorInfo = {
@@ -861,6 +880,23 @@ let percentageRangeOption = {
     tooltips: true
 }
 
+let toggleOption = {
+    start: 1, 
+    // Here connect interval is styled as non-selected 
+    connect: [true,false],
+    behaviour: 'tap',
+    step: 1,
+    range: {
+        'min': 0,
+        'max': 1
+    },
+    format: {
+         to: NumberToToggleLabel,
+         from: ToggleLabelToNumber
+    },
+    tooltips: true
+}
+
 function getSliderOptions(initialValue,type,step=1){
     let options;
 
@@ -873,6 +909,9 @@ function getSliderOptions(initialValue,type,step=1){
             break;
         case 'percentage':
             options = {...percentageOption};
+            break;
+        case 'toggle':
+            options = {...toggleOption};
             break;
     }
 
@@ -940,19 +979,30 @@ function initRandomColorSettings(){
 
 
 function initFadeSettings(){
+    let fromFadeMode = document.querySelector('#fromFadeMode');
     let fromFadeColorSel = document.querySelector('#fromFadeColorSel');
     let toFadeColorSel = document.querySelector('#toFadeColorSel');
     let fracFadeSel = document.querySelector('#fracFadeSel');
 
+    let fromFadeModeStart = 1;
+    let toggleSliderOption = getSliderOptions(fromFadeModeStart,'toggle');
+    noUiSlider.create(fromFadeMode, toggleSliderOption);
+    fromFadeMode.associatedSelector = document.querySelector('#fromFadeColorSelLabel');
+
+    if (fromFadeModeStart)
+        fromFadeMode.associatedSelector.classList.add('hidden');
+    fromFadeMode.noUiSlider.on('set',fromFadeModeCallback);
+
+
     let fracFadeStep = 0.1;
     let sliderOptions = getSliderOptions(fracFade*100,'percentage',fracFadeStep);
     sliderOptions.range= {
-        'min': [     0 ],
-        '30%': [   1,  1 ],
-        '60%': [  10, 1 ],
+        'min': [ 0 ],
+        '30%': [ 1,  1 ],
+        '60%': [ 10, 1 ],
         'max': [ 100 ]
     };
-    sliderOptions.padding = [fracFadeStep,0]; /* Exclude 0%*/ 
+    sliderOptions.padding = [fracFadeStep,0]; /* Exclude 0%*/
     noUiSlider.create(fracFadeSel, sliderOptions);
 
     fromFadeColorSel.addEventListener('input',setFromFadeColorCallback);

@@ -143,6 +143,16 @@ button.activeBtn {
     background-color: var(--light-grey);
 }
 
+.noUi-slider {
+    max-width: 50px;
+}
+
+.noUi-slider .noUi-connect {
+    /* The non-selected interval*/
+    background-color: var(--accent-color);
+    /*opacity: 0.9;*/
+}
+
 .noUi-connect {
     /* The non-selected interval*/
     background-color: var(--light-grey);
