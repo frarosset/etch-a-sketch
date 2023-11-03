@@ -2,16 +2,17 @@ let gridRows = 12;
 let gridCols = 12;
 let keepAR   = false;
 let idealAR  = 1;
-let penColor = thisAsFcn('black');
-let backgroundColor = 'white';
+let penColor = thisAsFcn('rgb(0,0,0)');
+let backgroundColor = 'rgb(255,255,255)';
 
 let toFadeColor;
 let fromFadeColor;
 let fracFade=0.1;
-let currentFadeIndexList;
+let currentFadeIndexList = [];
 let updateCurrentFadeColor; /* function set by the setFadeColorFunctions()*/
 let setCurrentFadeColor;/* function set by the setFadeColorFunctions()*/
-
+let downCell = -1;
+let downIndex;
 
 /* DOM elements ---------------------------------------- */
 
@@ -151,6 +152,7 @@ function createGrid(gridRows,gridCols){
         gridCnt.style.flexDirection =  'column';  
     }   
 
+    let cellId = 0;
     for (let i=0;i<gridRows;i++){
         let row = document.createElement('div');
         row.classList.add('rowOfGrid');
@@ -160,6 +162,8 @@ function createGrid(gridRows,gridCols){
             cell.classList.add('unselectable');
             setBackgroundColor(cell,backgroundColor);
             cell.currentColor = backgroundColor;
+            cell.dataset.id = cellId;
+            cellId++;
 
             cell.addEventListener("pointerdown",pointerDownCallback);
             cell.addEventListener('pointerenter',pointerEnterCallback);
@@ -356,31 +360,43 @@ function deleteGrid(){
 // occurs to the fade settings, to limit the size currentFadeIndexList. 
 
 function pointerDownCallback(e){
-
     let cell = e.target;
     let ptrId = e.pointerId;
     cell.releasePointerCapture(ptrId); // Important! (see above)
-    console.log('down ',ptrId,currentFadeIndexList);
+    console.log('down',ptrId,downCell,cell.dataset.id,currentFadeIndexList);
 
     if (cell.colorSetOnEnterOrDown){
-        if (e.pointerType === 'mouse'){
-            updateCurrentFadeColor(ptrId);
-        } else {
+        if (downCell != cell.dataset.id){
+            console.log(`New ${e.pointerType.toUpperCase()} down in this cell`);
             setCurrentFadeColor(ptrId);
+        } else {
+            console.log(`Successive ${e.pointerType.toUpperCase()} down in this cell`);
+            updateCurrentFadeColor(ptrId);
         }
         cell.currentColor = penColor(ptrId);
     } else {
+        console.log(`New ${e.pointerType.toUpperCase()} down in this cell (NO COLOR SET)`);
         setCurrentFadeColor(ptrId);
         cell.currentColor = getBackgroundColor(cell);
         cell.colorSetOnEnterOrDown = true;    
     }
     setBackgroundColor(cell,cell.currentColor);
+    downCell = cell.dataset.id;
 }
 
 function pointerEnterCallback(e){     
     let cell = e.target;
     let ptrId = e.pointerId;
-    console.log('enter',ptrId,currentFadeIndexList); 
+    console.log('enter',ptrId,downCell,cell.dataset.id,currentFadeIndexList); 
+
+    if (downCell == cell.dataset.id){
+        setCurrentFadeColor(ptrId,downIndex);
+    } else {
+        downCell = -1;
+        downIndex = 0;
+        if (!currentFadeIndexList.hasOwnProperty(ptrId))
+            setCurrentFadeColor(ptrId);
+    }
 
     let color = penColor(ptrId);
     if (e.buttons=='1'){
@@ -397,10 +413,15 @@ function pointerEnterCallback(e){
 function pointerLeaveCallback(e){
     let cell = e.target;
     let ptrId = e.pointerId;
-    console.log('leave',ptrId,currentFadeIndexList);
+    console.log('leave',ptrId,downCell,cell.dataset.id,currentFadeIndexList);
     cell.colorSetOnEnterOrDown = false;
     setBackgroundColor(cell,cell.currentColor);
     if (e.buttons!='1'){
+        if (downCell != cell.dataset.id){
+            downCell = -1;
+        } else {
+            downIndex = currentFadeIndexList[ptrId];
+        }
         setCurrentFadeColor(ptrId);
     } else {
         updateCurrentFadeColor(ptrId);
@@ -478,8 +499,8 @@ function resetCurrentFadeIndexList(){
     currentFadeIndexList = {};
 }
 
-function setCurrentFadeColor_enabled(ptrId){
-    currentFadeIndexList[ptrId]=0;
+function setCurrentFadeColor_enabled(ptrId,val=0){
+    currentFadeIndexList[ptrId]=val;
     console.log('   (RESET IDX TO ', currentFadeIndexList[ptrId],')'); /* debug */   
 }
 
