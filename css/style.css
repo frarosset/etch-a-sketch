@@ -1,177 +1,176 @@
-@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Montserrat&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Montserrat&display=swap");
 
 :root {
-    /* Colors */
-    --pure-black: rgb(0, 0, 0);
-    --pure-white: rgb(255, 255, 255);
-    --black: rgb(0, 0, 0);
-    --white: #f1f1f1;
-    --light-grey: rgb(210, 210, 210);
-    --dark-grey: rgb(120, 120, 120);
-    --accent-color: hsl(200, 100%, 50%); /* rgb(93, 192, 60); */
+  /* Colors */
+  --pure-black: rgb(0, 0, 0);
+  --pure-white: rgb(255, 255, 255);
+  --black: rgb(0, 0, 0);
+  --white: #f1f1f1;
+  --light-grey: rgb(210, 210, 210);
+  --dark-grey: rgb(120, 120, 120);
+  --accent-color: hsl(200, 100%, 50%); /* rgb(93, 192, 60); */
 
-    /* Font sizes */
-    --main-fontsize: 16px;
-    --hdr-fontsize: 36px;
-    --ftr-fontsize: 12px;
+  /* Font sizes */
+  --main-fontsize: 16px;
+  --hdr-fontsize: 36px;
+  --ftr-fontsize: 12px;
 
-    /* Font family */
-    --main-font: 'Gloria Hallelujah';
-    --hdr-font: 'Gloria Hallelujah';
-    --ftr-font: 'Montserrat';
+  /* Font family */
+  --main-font: "Gloria Hallelujah";
+  --hdr-font: "Gloria Hallelujah";
+  --ftr-font: "Montserrat";
 
-    /*Margins and paddings*/
-    --main-padding: 10px;
-    --hdr-padding: 10px;
-    --ftr-padding: 5px;
-    --setting-gap: 8px;
+  /*Margins and paddings*/
+  --main-padding: 10px;
+  --hdr-padding: 10px;
+  --ftr-padding: 5px;
+  --setting-gap: 8px;
 
-    /*Buttons*/
-    --btn-padding: 2px;
-    --btn-border: 2px;
-    --btn-fontsize: 16px;
-    --btn-radius: 8px;
+  /*Buttons*/
+  --btn-padding: 2px;
+  --btn-border: 2px;
+  --btn-fontsize: 16px;
+  --btn-radius: 8px;
 
-    /* Maximum column width */
-    --col-width: 1024px;
+  /* Maximum column width */
+  --col-width: 1024px;
 }
 
-
 html {
-    background-color: var(--white);
-    color: var(--black);
-    font-family: var(--main-font), sans-serif;
-    font-weight: 400;
-    line-height: 1.2;
+  background-color: var(--white);
+  color: var(--black);
+  font-family: var(--main-font), sans-serif;
+  font-weight: 400;
+  line-height: 1.2;
 }
 
 * {
-    font-family: inherit;
-    line-height: inherit;
-    color: inherit;
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
+  font-family: inherit;
+  line-height: inherit;
+  color: inherit;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 body {
-    margin: 0 auto;
-    height: 100vh;
-    /*it is assumed the same for <html>*/
-    width: 100%;
-    /* or max-width -- this avoids horizontal scroll bars */
+  margin: 0 auto;
+  height: 100vh;
+  /*it is assumed the same for <html>*/
+  width: 100%;
+  /* or max-width -- this avoids horizontal scroll bars */
 }
 
 main,
 header,
 footer {
-    width: 100%;
+  width: 100%;
 }
 
 header,
 main {
-    max-width: var(--col-width);
+  max-width: var(--col-width);
 }
 
 body,
 main,
 header,
 footer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 main {
-    flex: 1;
+  flex: 1;
 }
 
 /* || UTILITIES */
 
 .hidden {
-    visibility: hidden !important;
+  visibility: hidden !important;
 }
 
 .removed {
-    display: none !important;
+  display: none !important;
 }
 
 .nobullets {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .unselectable {
-    -webkit-user-select: none;
-    user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* CUSTOM STYLE */
 
 /* || Buttons */
 button {
-    padding: var(--btn-padding);
-    border: none;
-    border-radius: var(--btn-radius);
-    outline: 0 solid var(--light-grey);
-    background-color: var(--light-grey);
-    color: var(--black);
-    text-align: center;
-    font-size: var(--btn-fontsize);
-    transition-duration: 0.3s;
+  padding: var(--btn-padding);
+  border: none;
+  border-radius: var(--btn-radius);
+  outline: 0 solid var(--light-grey);
+  background-color: var(--light-grey);
+  color: var(--black);
+  text-align: center;
+  font-size: var(--btn-fontsize);
+  transition-duration: 0.3s;
 }
 
 button:hover {
-    background-color: var(--white);
-    outline: var(--btn-border) solid var(--light-grey);
+  background-color: var(--white);
+  outline: var(--btn-border) solid var(--light-grey);
 }
 
 button:active,
 button.activeBtn {
-    background-color: var(--accent-color);
-    outline: var(--btn-border) solid var(--accent-color);
+  background-color: var(--accent-color);
+  outline: var(--btn-border) solid var(--accent-color);
 }
 
 /* || noUIslider*/
 /* see https://refreshless.com/nouislider/more/#section-styling */
 /* The length are harcoded in pixels and should be modified the least possible*/
 .noUi-target {
-    width: 80%;
-    max-width: 400px;
-    margin: 35px 25px 10px;
-    background-color: var(--light-grey);
+  width: 80%;
+  max-width: 400px;
+  margin: 35px 25px 10px;
+  background-color: var(--light-grey);
 }
 
 .noUi-slider {
-    max-width: 50px;
+  max-width: 50px;
 }
 
 .noUi-slider .noUi-connect {
-    /* The non-selected interval*/
-    background-color: var(--accent-color);
-    /*opacity: 0.9;*/
+  /* The non-selected interval*/
+  background-color: var(--accent-color);
+  /*opacity: 0.9;*/
 }
 
 .noUi-connect {
-    /* The non-selected interval*/
-    background-color: var(--light-grey);
-    /*opacity: 0.9;*/
+  /* The non-selected interval*/
+  background-color: var(--light-grey);
+  /*opacity: 0.9;*/
 }
 
 .noUi-connect,
 .noUi-target {
-    border-radius: var(--btn-radius) !important;
+  border-radius: var(--btn-radius) !important;
 }
 
 .noUi-handle {
-    border-width: 0;
-    border-radius: 50%;
-    width: 28px !important;
-    right: -14px !important;
-    background-color: var(--accent-color);
-    /*  must be (width / 2) * -1 */
-    /* DEFAULT VALUES in noUIsliders ARE:
+  border-width: 0;
+  border-radius: 50%;
+  width: 28px !important;
+  right: -14px !important;
+  background-color: var(--accent-color);
+  /*  must be (width / 2) * -1 */
+  /* DEFAULT VALUES in noUIsliders ARE:
     width: 34px;
     height: 28px;
     top: -6px;
@@ -180,13 +179,13 @@ button.activeBtn {
 }
 
 .noUi-tooltip {
-    padding: 1px 5px;
+  padding: 1px 5px;
 }
 
 .noUi-handle::before,
 .noUi-handle::after {
-    display: none;
-    /* Hide markers on slider handles */
+  display: none;
+  /* Hide markers on slider handles */
 }
 
 /* https://refreshless.com/nouislider/examples/#section-toggle */
@@ -194,172 +193,171 @@ button.activeBtn {
 /* Color Input*/
 /* See https://stackoverflow.com/questions/64039144/convert-input-type-color-into-circle#:~:text=You%20can%20not%20change%20the%20input%20tag%20style,should%20define%20action%20of%20color-select%20when%20click%20span.*/
 .color-pick {
-    width:43px;
-    height:43px;
-    overflow: hidden;
-    border-radius:100%;
-    margin: 10px 25px;
-    border: 1px solid var(--light-grey);
-    border-radius: var(--btn-radius);    
+  width: 43px;
+  height: 43px;
+  overflow: hidden;
+  border-radius: 100%;
+  margin: 10px 25px;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--btn-radius);
 }
-input[type='color'] {
-    width:100%;
-    height:100%;
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 0px 3px 6px #0000001A;
-    transform: scale(1.5);
+input[type="color"] {
+  width: 100%;
+  height: 100%;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #0000001a;
+  transform: scale(1.5);
 }
 
 /* .noUi-input divs include a .noUi-target and a .noUi-label div */
 /* .noUi-input and .noUi-label divs are created here, and not part of the noUIslider library */
-.noUi-input, label {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+.noUi-input,
+label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 /* || Header */
 
 h1 {
-    font-family: var(--hdr-font), sans-serif;
-    font-size: var(--hdr-fontsize);
-    padding: var(--hdr-padding);
+  font-family: var(--hdr-font), sans-serif;
+  font-size: var(--hdr-fontsize);
+  padding: var(--hdr-padding);
 }
 
 /* || Footer */
 footer {
-    background-color: var(--light-grey);
-    color: var(--black);
-    font-family: var(--ftr-font), sans-serif;
-    font-size: var(--ftr-fontsize);
-    font-weight: 400;
-    line-height: 1.2;
-    padding: var(--ftr-padding);
+  background-color: var(--light-grey);
+  color: var(--black);
+  font-family: var(--ftr-font), sans-serif;
+  font-size: var(--ftr-fontsize);
+  font-weight: 400;
+  line-height: 1.2;
+  padding: var(--ftr-padding);
 }
 
 footer i {
-    font-size: 1.3em;
+  font-size: 1.3em;
 }
 
 /* || Grid */
 
 .grid-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    flex: 1;
-    padding: var(--main-padding);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  padding: var(--main-padding);
 }
 
 .grid {
-    flex: 1;
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    box-sizing: content-box;
-    border: 2px solid var(--light-grey);
+  flex: 1;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: content-box;
+  border: 2px solid var(--light-grey);
 }
 
 .rowOfGrid {
-    flex: 1 1 0;
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
 }
 
 .cellOfGrid {
-    flex: 1 1 0;
-    aspect-ratio: 1/1;
-    touch-action: none;
+  flex: 1 1 0;
+  aspect-ratio: 1/1;
+  touch-action: none;
 }
 
 .showGrid {
-    outline: 1px solid var(--light-grey);
+  outline: 1px solid var(--light-grey);
 }
 
 /******/
 
 #settings {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    padding: var(--main-padding);
-    gap: var(--setting-gap);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: var(--main-padding);
+  gap: var(--setting-gap);
 }
 
-#settings>* {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: var(--setting-gap);
+#settings > * {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--setting-gap);
 }
 
 .selectors {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--setting-gap);
-    height: 82.17px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--setting-gap);
+  height: 82.17px;
 }
 
 .info,
 .range-preview {
-    width: 100%;
-    max-height: 70px;
-    min-height: 30px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    border: 1px solid var(--light-grey);
-    border-radius: var(--btn-radius);
-    overflow: hidden;
+  width: 100%;
+  max-height: 70px;
+  min-height: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--btn-radius);
+  overflow: hidden;
 }
 
 .info {
-    align-items: center;
-    padding: 0 var(--setting-gap);
-    gap: var(--setting-gap);
+  align-items: center;
+  padding: 0 var(--setting-gap);
+  gap: var(--setting-gap);
 }
 
-.info>*,
-.selectors>* {
-    flex: 1;
+.info > *,
+.selectors > * {
+  flex: 1;
 }
 
 .range-preview {
-    align-items: stretch;
+  align-items: stretch;
 }
 
 /* || Settings Buttons specific settings*/
 #btnSettings {
-    flex-direction: row;
-    flex: none;
+  flex-direction: row;
+  flex: none;
 }
 
-#btnSettings>* {
-    flex: 1;
+#btnSettings > * {
+  flex: 1;
 }
 
 /* TODO */
 
-
-
 .slider {
-    height: 16px;
-    border-radius: var(--btn-radius);
-    appearance: none;
-    background: var(--light-grey);
-    outline: none;
+  height: 16px;
+  border-radius: var(--btn-radius);
+  appearance: none;
+  background: var(--light-grey);
+  outline: none;
 }
 
 .slider-toggle {
-    width: 32px;
+  width: 32px;
 }
