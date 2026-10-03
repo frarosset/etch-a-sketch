@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat&family=Teko&family=Kanit&display=swap");
 
 :root {
   /* Colors */
@@ -16,8 +16,8 @@
   --ftr-fontsize: 12px;
 
   /* Font family */
-  --main-font: "Gloria Hallelujah";
-  --hdr-font: "Gloria Hallelujah";
+  --main-font: "Kanit";
+  --hdr-font: "Teko", "Bebas Neue";
   --ftr-font: "Montserrat";
 
   /*Margins and paddings*/
@@ -34,6 +34,10 @@
 
   /* Maximum column width */
   --col-width: 1024px;
+}
+
+body {
+  background: linear-gradient(white 0%, var(--white) 100%);
 }
 
 html {
@@ -247,8 +251,11 @@ button:hover .icon-text {
   border-radius: 100%;
   margin: 10px 25px;
   border: 1px solid var(--light-grey);
-  border-radius: var(--btn-radius);
+
+  max-width: 8em;
+  border-radius: 4em;
 }
+
 input[type="color"] {
   width: 100%;
   height: 100%;
@@ -278,7 +285,6 @@ h1 {
 
 /* || Footer */
 footer {
-  background-color: var(--light-grey);
   color: var(--black);
   font-family: var(--ftr-font), sans-serif;
   font-size: var(--ftr-fontsize);
