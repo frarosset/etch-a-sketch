@@ -43,6 +43,10 @@
           <span class="icon icon-edit-grid"></span>
           <span class="icon-text">Edit grid</span>
         </button>
+        <button type="button" id="toggleGridBtn">
+          <span class="icon icon-toggle-grid"></span>
+          <span class="icon-text">Toggle grid</span>
+        </button>
       </div>
       <div id="newGridBtnSettings" class="modeSettings removed">
         <div class="selectors">
@@ -55,7 +59,6 @@
             <input type="range" min="1" max="100" value="20" class="slider" id="nColsSel" />
           </div>
           <label for="keepARSel" class="unselectable">Keep AR<input type="range" min="0" max="1" value="0" class="slider slider-toggle" id="keepARSel" /></label>
-          <label for="showGridSel" class="unselectable">Show Grid<input type="range" min="0" max="1" value="0" class="slider slider-toggle" id="showGridSel" /></label>
         </div>
         <div class="info">
           <div>Grid: <span id="gridInfo"></span></div>

@@ -136,6 +136,10 @@ button:hover {
   transform: scaleY(1.1) scaleX(1.05);
 }
 
+button:active {
+  transform: scaleY(1) scaleX(1);
+}
+
 button:active,
 button.activeBtn {
   background-color: var(--accent-color);
@@ -162,6 +166,10 @@ button:hover .icon-text {
 
   button:hover .icon-text {
     font-size: 0;
+  }
+
+  button:active .icon-text {
+    font-size: 1em;
   }
 }
 
@@ -320,14 +328,21 @@ footer i {
   cursor: crosshair;
 }
 
-main:has(#settings #newGridBtn.activeBtn) .grid {
+main:has(#settings #newGridBtn.activeBtn) .grid,
+#settings:has(#newGridBtn.activeBtn) #toggleGridBtn {
   /* pointer-events: none !important; */
   /* border: 5px solid red !important; */
   cursor: not-allowed !important;
 }
 
-main:has(#settings #newGridBtn.activeBtn) .grid * {
+main:has(#settings #newGridBtn.activeBtn) .grid *,
+#settings:has(#newGridBtn.activeBtn) #toggleGridBtn * {
   pointer-events: none !important;
+}
+
+#settings:has(#newGridBtn.activeBtn) #toggleGridBtn {
+  opacity: 0.5;
+  background: var(--light-grey);
 }
 
 .rowOfGrid {

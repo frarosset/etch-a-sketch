@@ -13,6 +13,7 @@ let updateCurrentFadeColor; /* function set by the setFadeColorFunctions()*/
 let setCurrentFadeColor; /* function set by the setFadeColorFunctions()*/
 let downCell = -1;
 let downIndex;
+let gridVisible = true;
 
 /* DOM elements ---------------------------------------- */
 
@@ -22,6 +23,7 @@ const fadeColorBtn = document.querySelector("#fadeColorBtn");
 const eraserBtn = document.querySelector("#eraserBtn");
 const clearGridBtn = document.querySelector("#clearGridBtn");
 const newGridBtn = document.querySelector("#newGridBtn");
+const toggleGridBtn = document.querySelector("#toggleGridBtn");
 
 const nRowsSel = document.querySelector("#nRowsSel");
 const nColsSel = document.querySelector("#nColsSel");
@@ -29,7 +31,6 @@ const nRowsLbl = document.querySelector("#nRowsLbl");
 const nColsLbl = document.querySelector("#nColsLbl");
 
 const keepARSel = document.querySelector("#keepARSel");
-const showGridSel = document.querySelector("#showGridSel");
 const fixedARInfo = document.querySelector("#fixedARInfo");
 const gridInfo = document.querySelector("#gridInfo");
 
@@ -186,7 +187,7 @@ function createGrid(gridRows, gridCols) {
 
   gridDivs = document.querySelectorAll(".cellOfGrid");
 
-  if (showGridSel.value == "1") {
+  if (gridVisible) {
     showGrid();
   }
 
@@ -252,26 +253,6 @@ keepARSel.addEventListener("input", (e) => {
 
   updateFixedARInfo();
 });
-
-showGridSel.addEventListener("input", (e) => {
-  if (e.target.value == "1") {
-    showGrid();
-  } else {
-    hideGrid();
-  }
-});
-
-function showGrid() {
-  gridDivs.forEach((itm) => {
-    itm.classList.add("showGrid");
-  });
-}
-
-function hideGrid() {
-  gridDivs.forEach((itm) => {
-    itm.classList.remove("showGrid");
-  });
-}
 
 function updateFixedARInfo() {
   const idealARToPrec = idealAR.toPrecision(2);
@@ -636,6 +617,29 @@ function clearGridBtnCallback() {
   initCellsFadeData(); // after clearing the grid
 }
 
+/* Toggle grid  */
+function toggleGridBtnCallback() {
+  if (gridVisible) {
+    hideGrid();
+  } else {
+    showGrid();
+  }
+}
+
+function showGrid() {
+  gridDivs.forEach((itm) => {
+    itm.classList.add("showGrid");
+  });
+  gridVisible = true;
+}
+
+function hideGrid() {
+  gridDivs.forEach((itm) => {
+    itm.classList.remove("showGrid");
+  });
+  gridVisible = false;
+}
+
 /* Add event listeners --------------------------------- */
 
 document.querySelectorAll("button.mutuallyExclusiveBtn").forEach((itm) => {
@@ -657,6 +661,8 @@ fadeColorBtn.addEventListener("click", fadeColorBtnCallback);
 eraserBtn.addEventListener("click", eraserBtnCallback);
 
 clearGridBtn.addEventListener("click", clearGridBtnCallback);
+
+toggleGridBtn.addEventListener("click", toggleGridBtnCallback);
 
 // TODO
 //  newGridBtn
