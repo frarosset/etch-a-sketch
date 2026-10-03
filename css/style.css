@@ -68,7 +68,8 @@ footer {
 }
 
 header,
-main {
+main,
+footer {
   max-width: var(--col-width);
 }
 
@@ -165,6 +166,18 @@ button:hover .icon-text {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.icons-credit {
+  color: var(--dark-grey);
+  font-size: 0.6rem;
+  text-align: right;
+  /* align-self: flex-end; */
+}
+
+.icons-credit a {
+  font-weight: bold;
+  cursor: pointer;
 }
 
 /* || noUIslider*/
