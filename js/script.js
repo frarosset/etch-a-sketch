@@ -3,7 +3,7 @@ let gridCols = 12;
 let keepAR = false;
 let idealAR = 1;
 let penColor = thisAsFcn("rgb(0,0,0)");
-let backgroundColor = "rgb(255,255,255)";
+const backgroundColor = "rgb(255,255,255)";
 
 let toFadeColor;
 let fromFadeColor;
@@ -16,27 +16,27 @@ let downIndex;
 
 /* DOM elements ---------------------------------------- */
 
-let oneColorBtn = document.querySelector("#oneColorBtn");
-let randomColorBtn = document.querySelector("#randomColorBtn");
-let fadeColorBtn = document.querySelector("#fadeColorBtn");
-let eraserBtn = document.querySelector("#eraserBtn");
-let clearGridBtn = document.querySelector("#clearGridBtn");
-let newGridBtn = document.querySelector("#newGridBtn");
+const oneColorBtn = document.querySelector("#oneColorBtn");
+const randomColorBtn = document.querySelector("#randomColorBtn");
+const fadeColorBtn = document.querySelector("#fadeColorBtn");
+const eraserBtn = document.querySelector("#eraserBtn");
+const clearGridBtn = document.querySelector("#clearGridBtn");
+const newGridBtn = document.querySelector("#newGridBtn");
 
-let nRowsSel = document.querySelector("#nRowsSel");
-let nColsSel = document.querySelector("#nColsSel");
-let nRowsLbl = document.querySelector("#nRowsLbl");
-let nColsLbl = document.querySelector("#nColsLbl");
+const nRowsSel = document.querySelector("#nRowsSel");
+const nColsSel = document.querySelector("#nColsSel");
+const nRowsLbl = document.querySelector("#nRowsLbl");
+const nColsLbl = document.querySelector("#nColsLbl");
 
-let keepARSel = document.querySelector("#keepARSel");
-let showGridSel = document.querySelector("#showGridSel");
-let fixedARInfo = document.querySelector("#fixedARInfo");
-let gridInfo = document.querySelector("#gridInfo");
+const keepARSel = document.querySelector("#keepARSel");
+const showGridSel = document.querySelector("#showGridSel");
+const fixedARInfo = document.querySelector("#fixedARInfo");
+const gridInfo = document.querySelector("#gridInfo");
 
-let oneColorSel = document.querySelector("#oneColorSel");
+const oneColorSel = document.querySelector("#oneColorSel");
 
-let grid = document.querySelector(".grid");
-let gridCnt = document.querySelector(".grid-container");
+const grid = document.querySelector(".grid");
+const gridCnt = document.querySelector(".grid-container");
 let gridDivs; /* Array, generated dynamically */
 
 /* Helper functions */
@@ -90,12 +90,11 @@ function thisAsFcn(variable) {
 
 function RGB2array(cssRGB) {
   // regex from: https://stackoverflow.com/questions/9585973/javascript-regular-expression-for-rgb-values
-  let rgbArray = cssRGB.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).splice(1, 3);
-  return rgbArray;
+  return cssRGB.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).splice(1, 3);
 }
 
 function hex2RGB(hex) {
-  let rgbArray = [];
+  const rgbArray = [];
   // skipindex 0, which is the '#' symbol
   for (let i = 1; i < hex.length; i += 2) {
     rgbArray.push(parseInt(hex.substr(i, 2), 16));
@@ -123,20 +122,20 @@ function cssHSLGradient(
   hslStartArray,
   hslEndArray,
   numOfIntervals = 20,
-  angle = 90
+  angle = 90,
 ) {
   // hsl: the current color point
   let hsl = hslStartArray;
-  let deltaHsl = hslEndArray.map(
-    (itm, idx) => (itm - hslStartArray[idx]) / numOfIntervals
+  const deltaHsl = hslEndArray.map(
+    (itm, idx) => (itm - hslStartArray[idx]) / numOfIntervals,
   );
   // p: position in the gradient in %
   let p = 0;
-  let deltaP = 100 / numOfIntervals;
+  const deltaP = 100 / numOfIntervals;
 
   let str = `linear-gradient(${angle}deg`;
   for (let i = 0; i < numOfIntervals; i++) {
-    let IntegerHsl = hsl.map((itm) => Math.round(itm));
+    const IntegerHsl = hsl.map((itm) => Math.round(itm));
     str += `, ${cssHSLColor(IntegerHsl)} ${p}%`;
     hsl = hsl.map((itm, idx) => itm + deltaHsl[idx]);
     p += deltaP;
@@ -152,8 +151,8 @@ function cssHSLGradient(
 function createGrid(gridRows, gridCols) {
   deleteGrid();
 
-  let gridAR = gridCols / gridRows;
-  let gridCntAR = computeAspectRatio(gridCnt);
+  const gridAR = gridCols / gridRows;
+  const gridCntAR = computeAspectRatio(gridCnt);
 
   setAspectRatio(grid, gridAR);
 
@@ -165,10 +164,10 @@ function createGrid(gridRows, gridCols) {
 
   let cellId = 0;
   for (let i = 0; i < gridRows; i++) {
-    let row = document.createElement("div");
+    const row = document.createElement("div");
     row.classList.add("rowOfGrid");
     for (let j = 0; j < gridCols; j++) {
-      let cell = document.createElement("div");
+      const cell = document.createElement("div");
       cell.classList.add("cellOfGrid");
       cell.classList.add("unselectable");
       setBackgroundColor(cell, backgroundColor);
@@ -275,9 +274,9 @@ function hideGrid() {
 }
 
 function updateFixedARInfo() {
-  let idealARToPrec = idealAR.toPrecision(2);
-  let isApprox = idealAR != idealARToPrec;
-  let strAR = keepAR
+  const idealARToPrec = idealAR.toPrecision(2);
+  const isApprox = idealAR != idealARToPrec;
+  const strAR = keepAR
     ? (isApprox ? "∼" : "") +
       idealARToPrec +
       " (" +
@@ -290,10 +289,10 @@ function updateFixedARInfo() {
 }
 
 function updateGridInfo() {
-  let gridAR = gridCols / gridRows;
-  let gridARToPrec = gridAR.toPrecision(2);
-  let isApprox = gridAR != gridARToPrec;
-  let strAR =
+  const gridAR = gridCols / gridRows;
+  const gridARToPrec = gridAR.toPrecision(2);
+  const isApprox = gridAR != gridARToPrec;
+  const strAR =
     gridCols +
     "x" +
     gridRows +
@@ -384,8 +383,8 @@ function deleteGrid() {
 // occurs to the fade settings, to limit the size currentFadeIndexList.
 
 function pointerDownCallback(e) {
-  let cell = e.target;
-  let ptrId = e.pointerId;
+  const cell = e.target;
+  const ptrId = e.pointerId;
   cell.releasePointerCapture(ptrId); // Important! (see above)
   console.log("down", ptrId, downCell, cell.dataset.id, currentFadeIndexList);
 
@@ -395,14 +394,14 @@ function pointerDownCallback(e) {
       setCurrentFadeColor(ptrId);
     } else {
       console.log(
-        `Successive ${e.pointerType.toUpperCase()} down in this cell`
+        `Successive ${e.pointerType.toUpperCase()} down in this cell`,
       );
       updateCurrentFadeColor(ptrId, cell);
     }
     cell.currentColor = penColor(ptrId, cell);
   } else {
     console.log(
-      `New ${e.pointerType.toUpperCase()} down in this cell (NO COLOR SET)`
+      `New ${e.pointerType.toUpperCase()} down in this cell (NO COLOR SET)`,
     );
     setCurrentFadeColor(ptrId);
     cell.currentColor = getBackgroundColor(cell);
@@ -413,8 +412,8 @@ function pointerDownCallback(e) {
 }
 
 function pointerEnterCallback(e) {
-  let cell = e.target;
-  let ptrId = e.pointerId;
+  const cell = e.target;
+  const ptrId = e.pointerId;
   console.log("enter", ptrId, downCell, cell.dataset.id, currentFadeIndexList);
 
   if (downCell == cell.dataset.id) {
@@ -425,7 +424,7 @@ function pointerEnterCallback(e) {
     if (!currentFadeIndexList.hasOwnProperty(ptrId)) setCurrentFadeColor(ptrId);
   }
 
-  let color = penColor(ptrId, cell);
+  const color = penColor(ptrId, cell);
   if (e.buttons == "1") {
     // mouse enters with (only) left button pressed or touch slide-in
     cell.currentColor = color;
@@ -438,8 +437,8 @@ function pointerEnterCallback(e) {
 }
 
 function pointerLeaveCallback(e) {
-  let cell = e.target;
-  let ptrId = e.pointerId;
+  const cell = e.target;
+  const ptrId = e.pointerId;
   console.log("leave", ptrId, downCell, cell.dataset.id, currentFadeIndexList);
   cell.colorSetOnEnterOrDown = false;
   setBackgroundColor(cell, cell.currentColor);
@@ -478,27 +477,27 @@ function selectBtn(btn) {
 }
 
 function clickBtnCallback(e) {
-  selectBtn(e.target);
+  selectBtn(e.currentTarget);
 }
 
 /* One color mode ---------------------------------------------------------- */
-function oneColorBtnCallback(e) {
+function oneColorBtnCallback() {
   setPenColor(thisAsFcn(oneColorSel.value));
 }
 
-function oneColorSelCallback(e) {
+function oneColorSelCallback() {
   setPenColor(thisAsFcn(oneColorSel.value));
 }
 
 /* Random color mode */
 function cssHSLRandomColor() {
-  let hslArray = randomColorRanges.ranges.map((itm) =>
-    randomIntegerInRange(...itm)
+  const hslArray = randomColorRanges.ranges.map((itm) =>
+    randomIntegerInRange(...itm),
   );
   return cssHSLColor(hslArray);
 }
 
-function randomColorBtnCallback(e) {
+function randomColorBtnCallback() {
   setPenColor(cssHSLRandomColor);
 }
 
@@ -552,7 +551,7 @@ function setCurrentFadeColorFromCustomColor_enabled(ptrId, val = 0) {
   console.log(
     "   (RESET IDX TO ",
     currentFadeIndexList[ptrId],
-    ")"
+    ")",
   ); /* debug */
 }
 
@@ -561,16 +560,16 @@ function updateCurrentFadeColorFromCustomColor_enabled(ptrId) {
   console.log(
     "   (UPDATE IDX TO ",
     currentFadeIndexList[ptrId],
-    ")"
+    ")",
   ); /* debug */
 }
 
 function cssFadeColorFromCustomColor(ptrId) {
   // This adds to the current fade color the same amout at every step
-  let currentFrac = Math.min(currentFadeIndexList[ptrId] * fracFade, 1);
+  const currentFrac = Math.min(currentFadeIndexList[ptrId] * fracFade, 1);
 
-  let currentFadeColor = fromFadeColor.map((itm, idx) =>
-    Math.round(itm * (1 - currentFrac) + toFadeColor[idx] * currentFrac)
+  const currentFadeColor = fromFadeColor.map((itm, idx) =>
+    Math.round(itm * (1 - currentFrac) + toFadeColor[idx] * currentFrac),
   );
 
   //console.log(currentFadeColor,currentFadeIndexList[ptrId]); /* debug */
@@ -580,10 +579,10 @@ function cssFadeColorFromCustomColor(ptrId) {
 
 function cssFadeColorFromCellColor(ptrId, cell) {
   // This adds to the current fade color the same amout at every step
-  let currentFrac = Math.min(cell.fadeIndex * fracFade, 1);
+  const currentFrac = Math.min(cell.fadeIndex * fracFade, 1);
 
-  let currentFadeColor = cell.fromFadeColor.map((itm, idx) =>
-    Math.round(itm * (1 - currentFrac) + toFadeColor[idx] * currentFrac)
+  const currentFadeColor = cell.fromFadeColor.map((itm, idx) =>
+    Math.round(itm * (1 - currentFrac) + toFadeColor[idx] * currentFrac),
   );
 
   //console.log(currentFadeColor,currentFadeIndexList[ptrId]); /* debug */
@@ -591,7 +590,7 @@ function cssFadeColorFromCellColor(ptrId, cell) {
   return cssRGBColor(currentFadeColor);
 }
 
-function fadeColorBtnCallback(e) {
+function fadeColorBtnCallback() {
   console.log(document.querySelector("#fromFadeMode").noUiSlider.get(true));
   if (document.querySelector("#fromFadeMode").noUiSlider.get(true) == 1) {
     // mode 1: frame from cell color
@@ -626,12 +625,12 @@ function fadeModeToggleCallback(values, handle, unencoded) {
 }
 
 /* Eraser mode */
-function eraserBtnCallback(e) {
+function eraserBtnCallback() {
   setPenColor(thisAsFcn(backgroundColor));
 }
 
 /* Clear grid  */
-function clearGridBtnCallback(e) {
+function clearGridBtnCallback() {
   clearGrid();
   resetCurrentFadeIndexList();
   initCellsFadeData(); // after clearing the grid
@@ -644,7 +643,7 @@ document.querySelectorAll("button.mutuallyExclusiveBtn").forEach((itm) => {
   // itm.dataset can only store strings... so add an attribute with the associated object,
   // to avoid calling querySelector multiple times
   itm.associatedSettings = document.querySelector(
-    "#" + itm.dataset.associatedSettingsId
+    "#" + itm.dataset.associatedSettingsId,
   );
 });
 
@@ -672,11 +671,11 @@ clearGridBtn.addEventListener("click", clearGridBtnCallback);
  * @param separator String joining tooltips
  */
 function mergeTooltips(slider, threshold, separator) {
-  let textIsRtl = getComputedStyle(slider).direction === "rtl";
-  let isRtl = slider.noUiSlider.options.direction === "rtl";
-  let isVertical = slider.noUiSlider.options.orientation === "vertical";
-  let tooltips = slider.noUiSlider.getTooltips();
-  let origins = slider.noUiSlider.getOrigins();
+  const textIsRtl = getComputedStyle(slider).direction === "rtl";
+  const isRtl = slider.noUiSlider.options.direction === "rtl";
+  const isVertical = slider.noUiSlider.options.orientation === "vertical";
+  const tooltips = slider.noUiSlider.getTooltips();
+  const origins = slider.noUiSlider.getOrigins();
 
   // Move tooltips into the origin element. The default stylesheet handles this.
   tooltips.forEach(function (tooltip, index) {
@@ -688,9 +687,9 @@ function mergeTooltips(slider, threshold, separator) {
   slider.noUiSlider.on(
     "update",
     function (values, handle, unencoded, tap, positions) {
-      let pools = [[]];
-      let poolPositions = [[]];
-      let poolValues = [[]];
+      const pools = [[]];
+      const poolPositions = [[]];
+      const poolValues = [[]];
       let atPool = 0;
 
       // Assign the first tooltip to the first pool, if the tooltip is configured
@@ -716,10 +715,10 @@ function mergeTooltips(slider, threshold, separator) {
       }
 
       pools.forEach(function (pool, poolIndex) {
-        let handlesInPool = pool.length;
+        const handlesInPool = pool.length;
 
         for (let j = 0; j < handlesInPool; j++) {
-          let handleNumber = pool[j];
+          const handleNumber = pool[j];
 
           if (j === handlesInPool - 1) {
             let offset = 0;
@@ -728,9 +727,9 @@ function mergeTooltips(slider, threshold, separator) {
               offset += 1000 - value;
             });
 
-            let direction = isVertical ? "bottom" : "right";
-            let last = isRtl ? 0 : handlesInPool - 1;
-            let lastOffset = 1000 - poolPositions[poolIndex][last];
+            const direction = isVertical ? "bottom" : "right";
+            const last = isRtl ? 0 : handlesInPool - 1;
+            const lastOffset = 1000 - poolPositions[poolIndex][last];
             offset =
               (textIsRtl && !isVertical ? 100 : 0) +
               offset / handlesInPool -
@@ -747,7 +746,7 @@ function mergeTooltips(slider, threshold, separator) {
           }
         }
       });
-    }
+    },
   );
 }
 
@@ -802,7 +801,7 @@ function setConnectForCircularData(rangeConnectDivArray, selectedRange) {
 function setSliderHandlesColor(
   rangeHandleDivArray,
   selectedRange,
-  componentIdx
+  componentIdx,
 ) {
   rangeHandleDivArray.forEach((itm, idx) => {
     itm.color[componentIdx] = selectedRange[idx];
@@ -811,20 +810,20 @@ function setSliderHandlesColor(
 }
 
 function updateRandomRangeSamples() {
-  let RandomRangeSamples = document.querySelector(
-    "#randomColorBtnSettings > .range-preview"
+  const RandomRangeSamples = document.querySelector(
+    "#randomColorBtnSettings > .range-preview",
   );
 
   removeDescendants(RandomRangeSamples);
-  let minH = randomColorRanges.ranges[0][0];
-  let maxH = randomColorRanges.ranges[0][1];
-  let minS = randomColorRanges.ranges[1][0];
-  let maxS = randomColorRanges.ranges[1][1];
-  let minL = randomColorRanges.ranges[2][0];
-  let maxL = randomColorRanges.ranges[2][1];
+  const minH = randomColorRanges.ranges[0][0];
+  const maxH = randomColorRanges.ranges[0][1];
+  const minS = randomColorRanges.ranges[1][0];
+  const maxS = randomColorRanges.ranges[1][1];
+  const minL = randomColorRanges.ranges[2][0];
+  const maxL = randomColorRanges.ranges[2][1];
 
-  let deltaH = Math.max(Math.floor((maxH - minH) / 12), 1);
-  let deltaS = Math.max(Math.floor((maxS - minS) / 5), 1);
+  const deltaH = Math.max(Math.floor((maxH - minH) / 12), 1);
+  const deltaS = Math.max(Math.floor((maxS - minS) / 5), 1);
 
   let sampleRow;
 
@@ -838,7 +837,7 @@ function updateRandomRangeSamples() {
         [h, s, minL],
         [h, s, maxL],
         20,
-        180
+        180,
       );
       RandomRangeSamples.appendChild(sampleRow);
     }
@@ -847,7 +846,7 @@ function updateRandomRangeSamples() {
       [h, maxS, minL],
       [h, maxS, maxL],
       20,
-      180
+      180,
     );
   }
   // overwrite last row with maximum h value
@@ -855,7 +854,7 @@ function updateRandomRangeSamples() {
     [maxH, maxS, minL],
     [maxH, maxS, maxL],
     20,
-    180
+    180,
   );
 }
 
@@ -863,18 +862,18 @@ function updateRandomRangeSamples() {
 /* https://refreshless.com/nouislider/events-callbacks/ */
 
 function setSliderHandlesColorCallback(values, handle, unencoded) {
-  let slider = this.target;
+  const slider = this.target;
   setSliderHandlesColor(slider.handleDivs, unencoded, slider.componentIdx);
 }
 
 function setConnectForCircularDataCallback(values, handle, unencoded) {
-  let slider = this.target;
+  const slider = this.target;
   setConnectForCircularData(slider.connectDivs, unencoded);
 }
 
 function setRandomColorRangeCallback(values, handle, unencoded) {
-  let slider = this.target;
-  let processedUnencoded = [...unencoded];
+  const slider = this.target;
+  const processedUnencoded = [...unencoded];
   if (processedUnencoded[0] > processedUnencoded[1])
     processedUnencoded[1] += 360;
   randomColorRanges.ranges[slider.componentIdx] = processedUnencoded;
@@ -932,7 +931,7 @@ let randomColorRanges = {
   ],
 };
 
-let angleRangeOption = {
+const angleRangeOption = {
   start: [0, 359],
   // Circular data: temporarly connect all the segments
   // Function setConnectForCircularData set the correct
@@ -953,7 +952,7 @@ let angleRangeOption = {
   tooltips: true,
 };
 
-let percentageOption = {
+const percentageOption = {
   start: 50,
   // Here connect interval is styled as non-selected
   connect: [false, false],
@@ -970,7 +969,7 @@ let percentageOption = {
   tooltips: true,
 };
 
-let percentageRangeOption = {
+const percentageRangeOption = {
   start: [20, 80],
   // Here connect interval is styled as non-selected
   connect: [true, false, true],
@@ -987,7 +986,7 @@ let percentageRangeOption = {
   tooltips: true,
 };
 
-let toggleOption = {
+const toggleOption = {
   start: 1,
   // Here connect interval is styled as non-selected
   connect: [true, false],
@@ -1030,27 +1029,27 @@ function getSliderOptions(initialValue, type, step = 1) {
 }
 
 function initRandomColorSettings() {
-  let compInfo = colorInfo[randomColorRanges.type];
-  let settingsDiv = document.querySelector(
-    "#randomColorBtnSettings > .selectors"
+  const compInfo = colorInfo[randomColorRanges.type];
+  const settingsDiv = document.querySelector(
+    "#randomColorBtnSettings > .selectors",
   );
 
   for (let i = 0; i < compInfo.labels.length; i++) {
-    let newLbl = document.createElement("div");
+    const newLbl = document.createElement("div");
     newLbl.textContent = compInfo.labels[i];
     newLbl.classList.add("unselectable");
     newLbl.classList.add("noUi-label");
 
-    let newSlider = document.createElement("div");
-    let sliderOptions = getSliderOptions(
+    const newSlider = document.createElement("div");
+    const sliderOptions = getSliderOptions(
       randomColorRanges.ranges[i],
-      compInfo.type[i] + "Range"
+      compInfo.type[i] + "Range",
     );
     noUiSlider.create(newSlider, sliderOptions);
 
     // Set target (full slider bar) background color as a gradient
-    let hslStartArray = [...compInfo.default]; // deep copy
-    let hslEndArray = [...compInfo.default];
+    const hslStartArray = [...compInfo.default]; // deep copy
+    const hslEndArray = [...compInfo.default];
     hslStartArray[i] = sliderOptions.range.min;
     hslEndArray[i] = sliderOptions.range.max;
     setHSLBackgroundGradient(newSlider, hslStartArray, hslEndArray);
@@ -1066,13 +1065,13 @@ function initRandomColorSettings() {
     }
 
     // Display the correct handle color
-    newSlider.handleDivs.forEach((handle, idx) => {
+    newSlider.handleDivs.forEach((handle) => {
       handle.color = [...compInfo.default];
     });
     setSliderHandlesColor(
       newSlider.handleDivs,
       sliderOptions.start,
-      newSlider.componentIdx
+      newSlider.componentIdx,
     );
     newSlider.noUiSlider.on("slide", setSliderHandlesColorCallback);
 
@@ -1082,7 +1081,7 @@ function initRandomColorSettings() {
     // Add the merge tooltips functionality
     mergeTooltips(newSlider, 35, " - ");
 
-    let newInput = document.createElement("div");
+    const newInput = document.createElement("div");
     newInput.classList.add("noUi-input");
     newInput.appendChild(newSlider);
     newInput.appendChild(newLbl);
@@ -1094,27 +1093,27 @@ function initRandomColorSettings() {
 }
 
 function initFadeSettings() {
-  let fromFadeMode = document.querySelector("#fromFadeMode");
-  let fromFadeColorSel = document.querySelector("#fromFadeColorSel");
-  let toFadeColorSel = document.querySelector("#toFadeColorSel");
-  let fracFadeSel = document.querySelector("#fracFadeSel");
+  const fromFadeMode = document.querySelector("#fromFadeMode");
+  const fromFadeColorSel = document.querySelector("#fromFadeColorSel");
+  const toFadeColorSel = document.querySelector("#toFadeColorSel");
+  const fracFadeSel = document.querySelector("#fracFadeSel");
 
-  let fromFadeModeStart = 1;
-  let toggleSliderOption = getSliderOptions(fromFadeModeStart, "toggle");
+  const fromFadeModeStart = 1;
+  const toggleSliderOption = getSliderOptions(fromFadeModeStart, "toggle");
   noUiSlider.create(fromFadeMode, toggleSliderOption);
   fromFadeMode.associatedSelector = document.querySelector(
-    "#fromFadeColorSelLabel"
+    "#fromFadeColorSelLabel",
   );
 
   if (fromFadeModeStart)
     fromFadeMode.associatedSelector.classList.add("hidden");
   fromFadeMode.noUiSlider.on("set", fadeModeToggleCallback);
 
-  let fracFadeStep = 0.1;
-  let sliderOptions = getSliderOptions(
+  const fracFadeStep = 0.1;
+  const sliderOptions = getSliderOptions(
     fracFade * 100,
     "percentage",
-    fracFadeStep
+    fracFadeStep,
   );
   sliderOptions.range = {
     min: [0],
