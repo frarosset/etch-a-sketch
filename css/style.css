@@ -317,6 +317,17 @@ footer i {
   align-items: stretch;
   box-sizing: content-box;
   border: 2px solid var(--light-grey);
+  cursor: crosshair;
+}
+
+main:has(#settings #newGridBtn.activeBtn) .grid {
+  /* pointer-events: none !important; */
+  /* border: 5px solid red !important; */
+  cursor: not-allowed !important;
+}
+
+main:has(#settings #newGridBtn.activeBtn) .grid * {
+  pointer-events: none !important;
 }
 
 .rowOfGrid {
@@ -332,7 +343,8 @@ footer i {
   touch-action: none;
 }
 
-.showGrid {
+.showGrid,
+main:has(#settings #newGridBtn.activeBtn) .grid .cellOfGrid {
   outline: 1px solid var(--light-grey);
 }
 
