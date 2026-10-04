@@ -5,12 +5,17 @@ let idealAR = 1;
 let penColor = thisAsFcn("rgb(0,0,0)");
 const backgroundColor = "rgb(255,255,255)";
 
+const stepsFadeMax = 1000; // both for fade and gradient mode
+const stepsFadeInitial = 10; // both for fade and gradient mode
+
 let toFadeColor;
-let fromFadeColor;
-let stepsFade = 10;
+let stepsFade = stepsFadeInitial;
+let toGradientColor;
+let fromGradientColor;
+let stepsGradient = stepsFadeInitial;
 let currentFadeIndexList = [];
-let updateCurrentFadeColor; /* function set by the setFadeColorFunctions()*/
-let setCurrentFadeColor; /* function set by the setFadeColorFunctions()*/
+let updateCurrentFadeColor; /* function set by the setFadeColorFunctions(), both for fade and gradient mode */
+let setCurrentFadeColor; /* function set by the setFadeColorFunctions(), both for fade and gradient mode */
 let downCell = -1;
 let downIndex;
 let gridVisible = true;
@@ -19,6 +24,7 @@ let gridVisible = true;
 
 const oneColorBtn = document.querySelector("#oneColorBtn");
 const randomColorBtn = document.querySelector("#randomColorBtn");
+const gradientColorBtn = document.querySelector("#gradientColorBtn");
 const fadeColorBtn = document.querySelector("#fadeColorBtn");
 const eraserBtn = document.querySelector("#eraserBtn");
 const clearGridBtn = document.querySelector("#clearGridBtn");
@@ -443,7 +449,12 @@ function selectBtn(btn) {
   currentBtn.classList.remove("activeBtn");
   //document.getElementById(currentBtn.dataset.associatedSettingsId).classList.add('removed');
   currentBtn.associatedSettings.classList.add("removed");
-  if (currentBtn === fadeColorBtn || btn === fadeColorBtn) {
+  if (
+    currentBtn === fadeColorBtn ||
+    btn === fadeColorBtn ||
+    currentBtn === gradientColorBtn ||
+    btn === gradientColorBtn
+  ) {
     resetCurrentFadeIndexList(); /* Empty the pointers list */
   }
 
@@ -496,15 +507,13 @@ function randomColorBtnCallback() {
 //  This function will be called when a new mode is set, e.g., in  selectBtn(btn)
 function setFadeColorFunctions() {
   if (currentBtn === fadeColorBtn) {
-    if (document.querySelector("#fromFadeMode").noUiSlider.get(true) == 1) {
-      updateCurrentFadeColor = updateCurrentFadeColorFromCellColor_enabled;
-      setCurrentFadeColor = () => {};
-      console.log("cell");
-    } else {
-      updateCurrentFadeColor = updateCurrentFadeColorFromCustomColor_enabled;
-      setCurrentFadeColor = setCurrentFadeColorFromCustomColor_enabled;
-      console.log("custom");
-    }
+    updateCurrentFadeColor = updateCurrentFadeColorFromCellColor_enabled;
+    setCurrentFadeColor = () => {};
+    console.log("cell");
+  } else if (currentBtn === gradientColorBtn) {
+    updateCurrentFadeColor = updateCurrentFadeColorFromCustomColor_enabled;
+    setCurrentFadeColor = setCurrentFadeColorFromCustomColor_enabled;
+    console.log("custom");
   } else {
     updateCurrentFadeColor = () => {};
     setCurrentFadeColor = () => {};
@@ -523,6 +532,7 @@ function initCellsFadeData() {
 }
 
 function updateCurrentFadeColorFromCellColor_enabled(ptrId, cell) {
+  // fade mode
   cell.fadeIndex++;
   console.log("   (UPDATE cell IDX TO ", cell.fadeIndex, ")"); /* debug */
 }
@@ -537,6 +547,7 @@ function setCurrentFadeColorFromCustomColor_enabled(ptrId, val = 0) {
 }
 
 function updateCurrentFadeColorFromCustomColor_enabled(ptrId) {
+  // gradient mode
   currentFadeIndexList[ptrId]++;
   console.log(
     "   (UPDATE IDX TO ",
@@ -546,13 +557,14 @@ function updateCurrentFadeColorFromCustomColor_enabled(ptrId) {
 }
 
 function cssFadeColorFromCustomColor(ptrId) {
-  const fracFade = 1 / stepsFade;
+  // gradient mode
+  const fracFade = 1 / stepsGradient;
 
   // This adds to the current fade color the same amout at every step
   const currentFrac = Math.min(currentFadeIndexList[ptrId] * fracFade, 1);
 
-  const currentFadeColor = fromFadeColor.map((itm, idx) =>
-    Math.round(itm * (1 - currentFrac) + toFadeColor[idx] * currentFrac),
+  const currentFadeColor = fromGradientColor.map((itm, idx) =>
+    Math.round(itm * (1 - currentFrac) + toGradientColor[idx] * currentFrac),
   );
 
   //console.log(currentFadeColor,currentFadeIndexList[ptrId]); /* debug */
@@ -561,6 +573,7 @@ function cssFadeColorFromCustomColor(ptrId) {
 }
 
 function cssFadeColorFromCellColor(ptrId, cell) {
+  // fade mode
   const fracFade = 1 / stepsFade;
 
   // This adds to the current fade color the same amout at every step
@@ -576,37 +589,17 @@ function cssFadeColorFromCellColor(ptrId, cell) {
 }
 
 function fadeColorBtnCallback() {
-  console.log(document.querySelector("#fromFadeMode").noUiSlider.get(true));
-  if (document.querySelector("#fromFadeMode").noUiSlider.get(true) == 1) {
-    // mode 1: frame from cell color
-    resetCurrentFadeIndexList();
-    initCellsFadeData();
-    setPenColor(cssFadeColorFromCellColor);
-  } else {
-    // mode 0: fade from fixed color
-    resetCurrentFadeIndexList();
-    initCellsFadeData();
-    setPenColor(cssFadeColorFromCustomColor);
-  }
+  // mode 1: frame from cell color
+  resetCurrentFadeIndexList();
+  initCellsFadeData();
+  setPenColor(cssFadeColorFromCellColor);
 }
 
-function fadeModeToggleCallback(values, handle, unencoded) {
-  setFadeColorFunctions();
-  if (unencoded == 1) {
-    // mode 1: frame from cell color
-    this.target.associatedSelector.classList.add("hidden");
-
-    resetCurrentFadeIndexList();
-    initCellsFadeData();
-    setPenColor(cssFadeColorFromCellColor);
-  } else {
-    // mode 0: fade from fixed color
-    this.target.associatedSelector.classList.remove("hidden");
-
-    resetCurrentFadeIndexList();
-    initCellsFadeData();
-    setPenColor(cssFadeColorFromCustomColor);
-  }
+function gradientColorBtnCallback() {
+  // fade mode 0: fade from fixed color
+  resetCurrentFadeIndexList();
+  initCellsFadeData();
+  setPenColor(cssFadeColorFromCustomColor);
 }
 
 /* Eraser mode */
@@ -661,6 +654,7 @@ oneColorSel.addEventListener("input", oneColorSelCallback);
 randomColorBtn.addEventListener("click", randomColorBtnCallback);
 
 fadeColorBtn.addEventListener("click", fadeColorBtnCallback);
+gradientColorBtn.addEventListener("click", gradientColorBtnCallback);
 
 eraserBtn.addEventListener("click", eraserBtnCallback);
 
@@ -898,18 +892,18 @@ function setRandomColorRangeCallback(values, handle, unencoded) {
   updateRandomRangeSamples();
 }
 
-/* Fade color callback*/
-function setFromFadeColor(colorInput) {
-  fromFadeColor = hex2RGB(colorInput.value);
-}
+/* Fade / Gradient color callback*/
 
 function setToFadeColor(colorInput) {
   toFadeColor = hex2RGB(colorInput.value);
 }
 
-function setFromFadeColorCallback(e) {
-  resetCurrentFadeIndexList();
-  setFromFadeColor(e.target);
+function setFromGradientColor(colorInput) {
+  fromGradientColor = hex2RGB(colorInput.value);
+}
+
+function setToGradientColor(colorInput) {
+  toGradientColor = hex2RGB(colorInput.value);
 }
 
 function setToFadeColorCallback(e) {
@@ -918,10 +912,27 @@ function setToFadeColorCallback(e) {
   setToFadeColor(e.target);
 }
 
+function setFromGradientColorCallback(e) {
+  resetCurrentFadeIndexList();
+  setFromGradientColor(e.target);
+}
+
+function setToGradientColorCallback(e) {
+  initCellsFadeData();
+  resetCurrentFadeIndexList();
+  setToGradientColor(e.target);
+}
+
 function setStepsFadeCallback(values, handle, unencoded) {
   initCellsFadeData();
   resetCurrentFadeIndexList();
   stepsFade = unencoded;
+}
+
+function setStepsGradientCallback(values, handle, unencoded) {
+  initCellsFadeData();
+  resetCurrentFadeIndexList();
+  stepsGradient = unencoded;
 }
 
 /* Initializaton Function and data */
@@ -1134,23 +1145,14 @@ function initRandomColorSettings() {
 }
 
 function initFadeSettings() {
-  const fromFadeMode = document.querySelector("#fromFadeMode");
-  const fromFadeColorSel = document.querySelector("#fromFadeColorSel");
+  // both gradient and fade mode
   const toFadeColorSel = document.querySelector("#toFadeColorSel");
   const stepsFadeSel = document.querySelector("#stepsFadeSel");
 
-  const fromFadeModeStart = 1;
-  const toggleSliderOption = getSliderOptions(fromFadeModeStart, "toggle");
-  noUiSlider.create(fromFadeMode, toggleSliderOption);
-  fromFadeMode.associatedSelector = document.querySelector(
-    "#fromFadeColorSelLabel",
-  );
+  const fromGradientColorSel = document.querySelector("#fromGradientColorSel");
+  const toGradientColorSel = document.querySelector("#toGradientColorSel");
+  const stepsGradientSel = document.querySelector("#stepsGradientSel");
 
-  if (fromFadeModeStart)
-    fromFadeMode.associatedSelector.classList.add("hidden");
-  fromFadeMode.noUiSlider.on("set", fadeModeToggleCallback);
-
-  const stepsFadeMax = 1000;
   const sliderOptions = getSliderOptions(stepsFade, "linearInt", {
     max: stepsFadeMax,
   });
@@ -1163,16 +1165,22 @@ function initFadeSettings() {
   sliderOptions.padding = [1, 0]; /* Exclude 0*/
 
   noUiSlider.create(stepsFadeSel, sliderOptions);
+  noUiSlider.create(stepsGradientSel, sliderOptions);
 
-  fromFadeColorSel.addEventListener("input", setFromFadeColorCallback);
   toFadeColorSel.addEventListener("input", setToFadeColorCallback);
+  fromGradientColorSel.addEventListener("input", setFromGradientColorCallback);
+  toGradientColorSel.addEventListener("input", setToGradientColorCallback);
   stepsFadeSel.noUiSlider.on("set", setStepsFadeCallback);
+  stepsGradientSel.noUiSlider.on("set", setStepsGradientCallback);
 
-  setFromFadeColor(fromFadeColorSel);
   setToFadeColor(toFadeColorSel);
+
+  setFromGradientColor(fromGradientColorSel);
+  setToGradientColor(toGradientColorSel);
 
   // Add the merge tooltips functionality
   mergeTooltips(stepsFadeSel, 35, " - ");
+  mergeTooltips(stepsGradientSel, 35, " - ");
 }
 
 /* Initialization ----------------------------------------------------------- */
