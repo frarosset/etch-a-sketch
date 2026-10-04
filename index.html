@@ -68,17 +68,19 @@
           </div>
         </div>
         <div class="info">
-          <div>Grid: <span id="gridInfo"></span></div>
+          <div class="grid-info">Grid: <span id="gridInfo"></span></div>
         </div>
       </div>
       <div id="oneColorBtnSettings" class="modeSettings removed">
         <div class="selectors">
-          <label for="oneColorSel" class="unselectable">
-            <div class="color-pick">
-              <input type="color" id="oneColorSel" value="#000000" />
-            </div>
-            Color
-          </label>
+          <div class="color-pick-label-container">
+            <label for="oneColorSel" class="unselectable">
+              <div class="color-pick">
+                <input type="color" id="oneColorSel" value="#000000" />
+              </div>
+              Color
+            </label>
+          </div>
         </div>
         <div class="info"></div>
       </div>
@@ -91,18 +93,22 @@
       </div>
       <div id="gradientColorBtnSettings" class="modeSettings removed">
         <div class="selectors">
-          <label for="fromGradientColorSel" class="unselectable" id="fromGradientColorSelLabel">
-            <div class="color-pick">
-              <input type="color" id="fromGradientColorSel" value="#FFFFFF" />
-            </div>
-            Start Color
-          </label>
-          <label for="toGradientColorSel" class="unselectable">
-            <div class="color-pick">
-              <input type="color" id="toGradientColorSel" value="#000000" />
-            </div>
-            End Color
-          </label>
+          <div class="color-pick-label-container">
+            <label for="fromGradientColorSel" class="unselectable" id="fromGradientColorSelLabel">
+              <div class="color-pick">
+                <input type="color" id="fromGradientColorSel" value="#FFFFFF" />
+              </div>
+              Start Color
+            </label>
+          </div>
+          <div class="color-pick-label-container">
+            <label for="toGradientColorSel" class="unselectable">
+              <div class="color-pick">
+                <input type="color" id="toGradientColorSel" value="#000000" />
+              </div>
+              End Color
+            </label>
+          </div>
           <div class="noUi-input">
             <div id="stepsGradientSel"></div>
             <div class="noUi-label">Steps</div>
@@ -112,12 +118,14 @@
       </div>
       <div id="fadeColorBtnSettings" class="modeSettings removed">
         <div class="selectors">
-          <label for="toFadeColorSel" class="unselectable">
-            <div class="color-pick">
-              <input type="color" id="toFadeColorSel" value="#000000" />
-            </div>
-            Target Color
-          </label>
+          <div class="color-pick-label-container">
+            <label for="toFadeColorSel" class="unselectable">
+              <div class="color-pick">
+                <input type="color" id="toFadeColorSel" value="#000000" />
+              </div>
+              Target Color
+            </label>
+          </div>
           <div class="noUi-input">
             <div id="stepsFadeSel"></div>
             <div class="noUi-label">Steps</div>

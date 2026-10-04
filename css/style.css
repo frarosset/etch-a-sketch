@@ -197,10 +197,17 @@ button:hover .icon-text {
 /* see https://refreshless.com/nouislider/more/#section-styling */
 /* The length are harcoded in pixels and should be modified the least possible*/
 .noUi-target {
-  width: 80%;
-  max-width: 400px;
+  min-width: 40px;
+  width: calc(100% - 40px);
+  max-width: 500px;
   margin: 35px 25px 10px;
   background-color: var(--light-grey);
+}
+
+.noUi-input.noUi-toggle .noUi-target {
+  min-width: 30px;
+  width: 30px;
+  max-width: 30px;
 }
 
 .noUi-slider {
@@ -265,6 +272,20 @@ button:hover .icon-text {
   border-radius: 4em;
 }
 
+.color-pick-label-container {
+  display: flex;
+  justify-content: center;
+}
+
+.color-pick-label-container > label {
+  width: min-content;
+}
+
+.color-pick-label-container:has(> label[for="toFadeColorSel"]) {
+  flex: 2;
+  margin-left: var(--setting-gap);
+}
+
 input[type="color"] {
   width: 100%;
   height: 100%;
@@ -282,6 +303,15 @@ label {
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+.noUi-input:has(> #keepARSel) {
+  flex: 0;
+}
+
+.noUi-input:has(> #stepsGradientSel),
+.noUi-input:has(> #stepsFadeSel) {
+  flex: 2;
 }
 
 /* || Header */
@@ -327,6 +357,11 @@ footer i {
   box-sizing: content-box;
   border: 2px solid var(--light-grey);
   cursor: crosshair;
+
+  overflow: hidden;
+  border: 1.5px solid var(--dark-grey);
+  border-radius: var(--btn-radius);
+  box-shadow: 0px 2px 5px var(--dark-grey);
 }
 
 main:has(#settings #newGridBtn.activeBtn) .grid,
@@ -383,11 +418,6 @@ main:has(#settings #newGridBtn.activeBtn) .grid .cellOfGrid {
   gap: var(--setting-gap);
 }
 
-label[for="toFadeColorSel"] {
-  flex: 2;
-  margin-right: var(--setting-gap);
-}
-
 .selectors {
   display: flex;
   flex-direction: row;
@@ -430,6 +460,11 @@ label[for="toFadeColorSel"] {
 
 .range-preview {
   align-items: stretch;
+}
+
+.info .grid-info {
+  display: flex;
+  justify-content: center;
 }
 
 /* || Settings Buttons specific settings*/
