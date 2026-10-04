@@ -7,7 +7,7 @@ const backgroundColor = "rgb(255,255,255)";
 
 let toFadeColor;
 let fromFadeColor;
-let fracFade = 0.1;
+let stepsFade = 10;
 let currentFadeIndexList = [];
 let updateCurrentFadeColor; /* function set by the setFadeColorFunctions()*/
 let setCurrentFadeColor; /* function set by the setFadeColorFunctions()*/
@@ -546,6 +546,8 @@ function updateCurrentFadeColorFromCustomColor_enabled(ptrId) {
 }
 
 function cssFadeColorFromCustomColor(ptrId) {
+  const fracFade = 1 / stepsFade;
+
   // This adds to the current fade color the same amout at every step
   const currentFrac = Math.min(currentFadeIndexList[ptrId] * fracFade, 1);
 
@@ -559,6 +561,8 @@ function cssFadeColorFromCustomColor(ptrId) {
 }
 
 function cssFadeColorFromCellColor(ptrId, cell) {
+  const fracFade = 1 / stepsFade;
+
   // This adds to the current fade color the same amout at every step
   const currentFrac = Math.min(cell.fadeIndex * fracFade, 1);
 
@@ -783,6 +787,14 @@ function PercentageToNumber(string) {
   return Number(string.replace("%", ""));
 }
 
+function NumberToInt(number) {
+  return Math.round(number);
+}
+
+function IntToNumber(string) {
+  return Number(string);
+}
+
 function NumberToToggleLabel(number) {
   return number == 0 ? "false" : "true";
 }
@@ -906,10 +918,10 @@ function setToFadeColorCallback(e) {
   setToFadeColor(e.target);
 }
 
-function setFracFadeCallback(values, handle, unencoded) {
+function setStepsFadeCallback(values, handle, unencoded) {
   initCellsFadeData();
   resetCurrentFadeIndexList();
-  fracFade = unencoded / 100;
+  stepsFade = unencoded;
 }
 
 /* Initializaton Function and data */
@@ -975,6 +987,23 @@ const percentageOption = {
   tooltips: true,
 };
 
+const linearIntOption = {
+  start: 50,
+  // Here connect interval is styled as non-selected
+  connect: [false, false],
+  behaviour: "tap",
+  step: 1,
+  range: {
+    min: 0,
+    max: 100,
+  },
+  format: {
+    to: NumberToInt,
+    from: IntToNumber,
+  },
+  tooltips: true,
+};
+
 const percentageRangeOption = {
   start: [20, 80],
   // Here connect interval is styled as non-selected
@@ -1009,7 +1038,7 @@ const toggleOption = {
   tooltips: true,
 };
 
-function getSliderOptions(initialValue, type, step = 1) {
+function getSliderOptions(initialValue, type, custom = {}) {
   let options;
 
   switch (type) {
@@ -1025,11 +1054,17 @@ function getSliderOptions(initialValue, type, step = 1) {
     case "toggle":
       options = { ...toggleOption };
       break;
+    case "linearInt":
+      options = { ...linearIntOption };
+      break;
   }
 
   // Here you can modify the hardcoded default options
-  options["start"] = initialValue;
-  options["step"] = step;
+  options.start = initialValue;
+
+  if (custom.step) options.step = custom.step;
+  if (custom.max) options.range.max = custom.max;
+  if (custom.min) options.range.min = custom.min;
 
   return options;
 }
@@ -1102,7 +1137,7 @@ function initFadeSettings() {
   const fromFadeMode = document.querySelector("#fromFadeMode");
   const fromFadeColorSel = document.querySelector("#fromFadeColorSel");
   const toFadeColorSel = document.querySelector("#toFadeColorSel");
-  const fracFadeSel = document.querySelector("#fracFadeSel");
+  const stepsFadeSel = document.querySelector("#stepsFadeSel");
 
   const fromFadeModeStart = 1;
   const toggleSliderOption = getSliderOptions(fromFadeModeStart, "toggle");
@@ -1115,30 +1150,29 @@ function initFadeSettings() {
     fromFadeMode.associatedSelector.classList.add("hidden");
   fromFadeMode.noUiSlider.on("set", fadeModeToggleCallback);
 
-  const fracFadeStep = 0.1;
-  const sliderOptions = getSliderOptions(
-    fracFade * 100,
-    "percentage",
-    fracFadeStep,
-  );
+  const stepsFadeMax = 1000;
+  const sliderOptions = getSliderOptions(stepsFade, "linearInt", {
+    max: stepsFadeMax,
+  });
   sliderOptions.range = {
     min: [0],
-    "30%": [1, 1],
-    "60%": [10, 1],
-    max: [100],
+    "30%": [10, 1],
+    "60%": [100, 1],
+    max: [stepsFadeMax],
   };
-  sliderOptions.padding = [fracFadeStep, 0]; /* Exclude 0%*/
-  noUiSlider.create(fracFadeSel, sliderOptions);
+  sliderOptions.padding = [1, 0]; /* Exclude 0*/
+
+  noUiSlider.create(stepsFadeSel, sliderOptions);
 
   fromFadeColorSel.addEventListener("input", setFromFadeColorCallback);
   toFadeColorSel.addEventListener("input", setToFadeColorCallback);
-  fracFadeSel.noUiSlider.on("set", setFracFadeCallback);
+  stepsFadeSel.noUiSlider.on("set", setStepsFadeCallback);
 
   setFromFadeColor(fromFadeColorSel);
   setToFadeColor(toFadeColorSel);
 
   // Add the merge tooltips functionality
-  mergeTooltips(fracFadeSel, 35, " - ");
+  mergeTooltips(stepsFadeSel, 35, " - ");
 }
 
 /* Initialization ----------------------------------------------------------- */
