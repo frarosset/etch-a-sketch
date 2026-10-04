@@ -9,6 +9,7 @@
   --light-grey: rgb(210, 210, 210);
   --dark-grey: rgb(120, 120, 120);
   --accent-color: hsl(200, 40%, 80%); /* rgb(93, 192, 60); */
+  --noUi-handle-color: rgb(0, 170, 255);
 
   /* Font sizes */
   --main-fontsize: 16px;
@@ -228,7 +229,7 @@ button:hover .icon-text {
   border-radius: 50%;
   width: 28px !important;
   right: -14px !important;
-  background-color: var(--accent-color);
+  background-color: var(--noUi-handle-color);
   /*  must be (width / 2) * -1 */
   /* DEFAULT VALUES in noUIsliders ARE:
     width: 34px;
@@ -382,6 +383,11 @@ main:has(#settings #newGridBtn.activeBtn) .grid .cellOfGrid {
   gap: var(--setting-gap);
 }
 
+label[for="toFadeColorSel"] {
+  flex: 2;
+  margin-right: var(--setting-gap);
+}
+
 .selectors {
   display: flex;
   flex-direction: row;
@@ -408,11 +414,18 @@ main:has(#settings #newGridBtn.activeBtn) .grid .cellOfGrid {
   align-items: center;
   padding: 0 var(--setting-gap);
   gap: var(--setting-gap);
+  border: none;
 }
 
 .info > *,
 .selectors > * {
   flex: 1;
+}
+
+.info .label {
+  flex: 0;
+  width: max-content;
+  text-transform: small-caps;
 }
 
 .range-preview {

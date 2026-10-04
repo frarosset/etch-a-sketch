@@ -823,7 +823,7 @@ function setSliderHandlesColor(
 
 function updateRandomRangeSamples() {
   const RandomRangeSamples = document.querySelector(
-    "#randomColorBtnSettings > .range-preview",
+    "#randomColorBtnSettings  .range-preview",
   );
 
   removeDescendants(RandomRangeSamples);
