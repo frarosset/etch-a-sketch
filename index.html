@@ -41,32 +41,34 @@
         </button>
         <button type="button" id="clearGridBtn">
           <span class="icon icon-clear-grid"></span>
-          <span class="icon-text">Clear grid</span>
+          <span class="icon-text">Reset</span>
         </button>
         <button type="button" id="newGridBtn" class="mutuallyExclusiveBtn" data-associated-settings-id="newGridBtnSettings">
           <span class="icon icon-edit-grid"></span>
-          <span class="icon-text">Edit grid</span>
+          <span class="icon-text">Resize</span>
         </button>
         <button type="button" id="toggleGridBtn">
           <span class="icon icon-toggle-grid"></span>
-          <span class="icon-text">Toggle grid</span>
+          <span class="icon-text">Grid</span>
         </button>
       </div>
       <div id="newGridBtnSettings" class="modeSettings removed">
         <div class="selectors">
-          <div>
-            <label for="nRowsSel" class="unselectable">Rows:<span id="nRowsLbl"></span></label>
-            <input type="range" min="1" max="100" value="20" class="slider" id="nRowsSel" />
+          <div class="noUi-input">
+            <div id="nColsSel"></div>
+            <div class="noUi-label">Columns</div>
           </div>
-          <div>
-            <label for="nColsSel" class="unselectable">Columns:<span id="nColsLbl"></span></label>
-            <input type="range" min="1" max="100" value="20" class="slider" id="nColsSel" />
+          <div class="noUi-input">
+            <div id="nRowsSel"></div>
+            <div class="noUi-label">Rows</div>
           </div>
-          <label for="keepARSel" class="unselectable">Keep AR<input type="range" min="0" max="1" value="0" class="slider slider-toggle" id="keepARSel" /></label>
+          <div class="noUi-input noUi-toggle">
+            <div id="keepARSel" class="noUi-slider"></div>
+            <div class="noUi-label">Fix AR</div>
+          </div>
         </div>
         <div class="info">
           <div>Grid: <span id="gridInfo"></span></div>
-          <div>Fixed AR: <span id="fixedARInfo"></span></div>
         </div>
       </div>
       <div id="oneColorBtnSettings" class="modeSettings removed">

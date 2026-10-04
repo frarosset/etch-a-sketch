@@ -1,12 +1,16 @@
-let gridRows = 12;
-let gridCols = 12;
-let keepAR = false;
+const stepsFadeMax = 1000; // both for fade and gradient mode
+const stepsFadeInitial = 10; // both for fade and gradient mode
+const keepARInitial = 1;
+const gridSizeInitial = 20;
+const gridSizeMax = 100;
+const gridSizeMin = 1;
+
+let gridRows = gridSizeInitial;
+let gridCols = gridSizeInitial;
+let keepAR = keepARInitial;
 let idealAR = 1;
 let penColor = thisAsFcn("rgb(0,0,0)");
 const backgroundColor = "rgb(255,255,255)";
-
-const stepsFadeMax = 1000; // both for fade and gradient mode
-const stepsFadeInitial = 10; // both for fade and gradient mode
 
 let toFadeColor;
 let stepsFade = stepsFadeInitial;
@@ -31,13 +35,6 @@ const clearGridBtn = document.querySelector("#clearGridBtn");
 const newGridBtn = document.querySelector("#newGridBtn");
 const toggleGridBtn = document.querySelector("#toggleGridBtn");
 
-const nRowsSel = document.querySelector("#nRowsSel");
-const nColsSel = document.querySelector("#nColsSel");
-const nRowsLbl = document.querySelector("#nRowsLbl");
-const nColsLbl = document.querySelector("#nColsLbl");
-
-const keepARSel = document.querySelector("#keepARSel");
-const fixedARInfo = document.querySelector("#fixedARInfo");
 const gridInfo = document.querySelector("#gridInfo");
 
 const oneColorSel = document.querySelector("#oneColorSel");
@@ -200,86 +197,11 @@ function createGrid(gridRows, gridCols) {
   updateGridInfo();
 }
 
-/* Settings interface*/
-
-nRowsSel.addEventListener("input", (e) => {
-  if (keepAR) {
-    gridRows = e.target.value;
-    gridCols = Math.round(idealAR * gridRows);
-
-    if (gridCols > e.target.max) {
-      gridCols = e.target.max;
-      gridRows = Math.round(gridCols / idealAR);
-      nRowsSel.value = gridRows;
-    } else if (gridCols < e.target.min) {
-      gridCols = e.target.min;
-      gridRows = Math.round(gridCols / idealAR);
-      nRowsSel.value = gridRows;
-    }
-
-    nColsLbl.textContent = gridCols;
-    nRowsLbl.textContent = gridRows;
-    nColsSel.value = gridCols;
-  } else {
-    gridRows = e.target.value;
-    nRowsLbl.textContent = gridRows;
-  }
-
-  createGrid(gridRows, gridCols);
-});
-
-nColsSel.addEventListener("input", (e) => {
-  if (keepAR) {
-    gridCols = e.target.value;
-    gridRows = Math.round(gridCols / idealAR);
-
-    if (gridRows > e.target.max) {
-      gridRows = e.target.max;
-      gridCols = Math.round(idealAR * gridRows);
-      nColsSel.value = gridCols;
-    } else if (gridRows < e.target.min) {
-      gridRows = e.target.min;
-      gridCols = Math.round(idealAR * gridRows);
-      nColsSel.value = gridCols;
-    }
-
-    nColsLbl.textContent = gridCols;
-    nRowsLbl.textContent = gridRows;
-    nRowsSel.value = gridRows;
-  } else {
-    gridCols = e.target.value;
-    nColsLbl.textContent = gridCols;
-  }
-  createGrid(gridRows, gridCols);
-});
-
-keepARSel.addEventListener("input", (e) => {
-  idealAR = gridCols / gridRows;
-  keepAR = e.target.value == "1";
-
-  updateFixedARInfo();
-});
-
-function updateFixedARInfo() {
-  const idealARToPrec = idealAR.toPrecision(2);
-  const isApprox = idealAR != idealARToPrec;
-  const strAR = keepAR
-    ? (isApprox ? "∼" : "") +
-      idealARToPrec +
-      " (" +
-      gridCols +
-      ":" +
-      gridRows +
-      ")"
-    : "none";
-  fixedARInfo.textContent = strAR;
-}
-
 function updateGridInfo() {
   const gridAR = gridCols / gridRows;
   const gridARToPrec = gridAR.toPrecision(2);
   const isApprox = gridAR != gridARToPrec;
-  const strAR =
+  let strAR =
     gridCols +
     "x" +
     gridRows +
@@ -287,8 +209,29 @@ function updateGridInfo() {
     (isApprox ? "∼" : "") +
     gridARToPrec +
     ")";
+
+  console.log(strAR, keepAR);
+
+  if (keepAR) {
+    const idealARToPrec = idealAR.toPrecision(2);
+    const isApprox = idealAR != idealARToPrec;
+    const match = idealAR == gridAR;
+    strAR +=
+      ",  keeping AR " +
+      (match ? " at " : " around ") +
+      (isApprox ? "∼" : "") +
+      idealARToPrec;
+    // " (" +
+    // gridCols +
+    // ":" +
+    // gridRows +
+    // ")";
+  }
+
   gridInfo.textContent = strAR;
 }
+
+/* Settings interface*/
 
 /* Grid Functions */
 function clearGrid() {
@@ -923,16 +866,16 @@ function setToGradientColorCallback(e) {
   setToGradientColor(e.target);
 }
 
-function setStepsFadeCallback(values, handle, unencoded) {
+function setStepsFadeCallback(values) {
   initCellsFadeData();
   resetCurrentFadeIndexList();
-  stepsFade = unencoded;
+  stepsFade = values;
 }
 
-function setStepsGradientCallback(values, handle, unencoded) {
+function setStepsGradientCallback(values) {
   initCellsFadeData();
   resetCurrentFadeIndexList();
-  stepsGradient = unencoded;
+  stepsGradient = values;
 }
 
 /* Initializaton Function and data */
@@ -1046,7 +989,7 @@ const toggleOption = {
     to: NumberToToggleLabel,
     from: ToggleLabelToNumber,
   },
-  tooltips: true,
+  tooltips: false,
 };
 
 function getSliderOptions(initialValue, type, custom = {}) {
@@ -1183,10 +1126,97 @@ function initFadeSettings() {
   mergeTooltips(stepsGradientSel, 35, " - ");
 }
 
+function keepARSelCallback(values, handle, unencoded) {
+  idealAR = gridCols / gridRows;
+  keepAR = unencoded == "1";
+
+  updateGridInfo();
+}
+
+function nRowsSelCallback(values) {
+  const nRowsSel = this.target;
+  const nColsSel = nRowsSel.nColsSel;
+
+  gridRows = values;
+
+  if (keepAR) {
+    gridCols = Math.round(idealAR * gridRows);
+
+    if (gridCols > gridSizeMax) {
+      gridCols = gridSizeMax;
+      gridRows = Math.round(gridCols / idealAR);
+      nRowsSel.noUiSlider.set([gridRows]);
+    } else if (gridCols < gridSizeMin) {
+      gridCols = gridSizeMin;
+      gridRows = Math.round(gridCols / idealAR);
+
+      nRowsSel.noUiSlider.set([gridRows]);
+    }
+
+    nColsSel.noUiSlider.set([gridCols]);
+  }
+
+  createGrid(gridRows, gridCols);
+}
+
+function nColsSelCallback(values) {
+  const nColsSel = this.target;
+  const nRowsSel = nColsSel.nRowsSel;
+
+  gridCols = values;
+
+  if (keepAR) {
+    gridRows = Math.round(gridCols / idealAR);
+
+    if (gridRows > gridSizeMax) {
+      gridRows = gridSizeMax;
+      gridCols = Math.round(idealAR * gridRows);
+      nColsSel.noUiSlider.set([gridCols]);
+    } else if (gridRows < gridSizeMin) {
+      gridRows = gridSizeMin;
+      gridCols = Math.round(idealAR * gridRows);
+      nColsSel.noUiSlider.set([gridCols]);
+    }
+
+    nRowsSel.noUiSlider.set([gridRows]);
+  }
+
+  createGrid(gridRows, gridCols);
+}
+
+function initNewGridSettings() {
+  const nRowsSel = document.querySelector("#nRowsSel");
+  const nColsSel = document.querySelector("#nColsSel");
+  const keepARSel = document.querySelector("#keepARSel");
+
+  // save nRowsSel handler in nColsSel and nColsSel handler in nRowsSel
+  nRowsSel.nColsSel = nColsSel;
+  nColsSel.nRowsSel = nRowsSel;
+
+  const sliderOptions = getSliderOptions(gridSizeInitial, "linearInt", {
+    max: gridSizeMax,
+    min: gridSizeMin,
+  });
+
+  // sliderOptions.padding = [1, 0]; /* Exclude 0*/
+
+  noUiSlider.create(nRowsSel, sliderOptions);
+  noUiSlider.create(nColsSel, sliderOptions);
+
+  nRowsSel.noUiSlider.on("slide", nRowsSelCallback);
+  nColsSel.noUiSlider.on("slide", nColsSelCallback);
+
+  const toggleSliderOption = getSliderOptions(keepARInitial, "toggle");
+  noUiSlider.create(keepARSel, toggleSliderOption);
+
+  keepARSel.noUiSlider.on("set", keepARSelCallback);
+}
+
 /* Initialization ----------------------------------------------------------- */
 
 initRandomColorSettings();
 initFadeSettings();
+initNewGridSettings();
 
 let currentBtn = oneColorBtn;
 selectBtn(oneColorBtn);
