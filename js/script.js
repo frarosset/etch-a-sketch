@@ -208,7 +208,7 @@ function updateGridInfo() {
     gridARToPrec +
     ")";
 
-  console.log(strAR, keepAR);
+  // console.log(strAR, keepAR);
 
   if (keepAR) {
     const idealARToPrec = idealAR.toPrecision(2);
@@ -315,19 +315,19 @@ function pointerDownCallback(e) {
   const ptrId = e.pointerId;
   const pointerType = e.pointerType.toUpperCase();
   cell.releasePointerCapture(ptrId); // Important! (see above)
-  console.log("down", ptrId, downCell, cell.dataset.id, currentFadeIndexList);
+  // console.log("down", ptrId, downCell, cell.dataset.id, currentFadeIndexList);
 
   if (cell.colorSetOnEnterOrDown) {
     if (downCell != cell.dataset.id) {
-      console.log(`New ${pointerType} down in this cell`);
+      // console.log(`New ${pointerType} down in this cell`);
       setCurrentFadeColor(ptrId);
     } else {
-      console.log(`Successive ${pointerType} down in this cell`);
+      // console.log(`Successive ${pointerType} down in this cell`);
       updateCurrentFadeColor(ptrId, cell);
     }
     cell.currentColor = penColor(ptrId, cell);
   } else {
-    console.log(`New ${pointerType} down in this cell (NO COLOR SET)`);
+    // console.log(`New ${pointerType} down in this cell (NO COLOR SET)`);
     setCurrentFadeColor(ptrId);
     cell.currentColor = getBackgroundColor(cell);
     cell.colorSetOnEnterOrDown = true;
@@ -339,13 +339,13 @@ function pointerDownCallback(e) {
 function pointerEnterCallback(e) {
   const cell = e.target;
   const ptrId = e.pointerId;
-  console.log(
-    "\nenter",
-    ptrId,
-    downCell,
-    cell.dataset.id,
-    currentFadeIndexList,
-  );
+  // console.log(
+  //   "\nenter",
+  //   ptrId,
+  //   downCell,
+  //   cell.dataset.id,
+  //   currentFadeIndexList,
+  // );
 
   if (downCell == cell.dataset.id) {
     setCurrentFadeColor(ptrId, downIndex);
@@ -370,7 +370,7 @@ function pointerEnterCallback(e) {
 function pointerLeaveCallback(e) {
   const cell = e.target;
   const ptrId = e.pointerId;
-  console.log("leave", ptrId, downCell, cell.dataset.id, currentFadeIndexList);
+  // console.log("leave", ptrId, downCell, cell.dataset.id, currentFadeIndexList);
   cell.colorSetOnEnterOrDown = false;
   setBackgroundColor(cell, cell.currentColor);
   if (e.buttons != "1") {
@@ -401,15 +401,48 @@ function pointerDownGridCallback(e) {
   pointerDownCallback(eCell);
 }
 
+let currentCell = null;
+
+// Track movement across cells inside the grid
+function pointerMoveGridCallback(e) {
+  const eCell = extractClosestCellE(e);
+  const cell = eCell.target;
+
+  if (cell !== currentCell) {
+    // If we were in a previous cell, trigger leave
+    if (currentCell) {
+      pointerLeaveCallback({ ...eCell, target: currentCell });
+    }
+
+    // Update current cell and trigger enter (if we moved into a cell)
+    currentCell = cell;
+    if (currentCell) {
+      pointerEnterCallback({ ...eCell, target: currentCell });
+    }
+  }
+}
+
+// Catch when the mouse completely leaves the grid container
+function pointerLeaveGridCallback(e) {
+  const eCell = extractClosestCellE(e);
+
+  if (currentCell) {
+    pointerLeaveCallback({ ...eCell, target: currentCell });
+    currentCell = null;
+  }
+}
+
 function initCellListeners(cell) {
   // cell.addEventListener("pointerdown", pointerDownCallback); // use event delegation
-  cell.addEventListener("pointerenter", pointerEnterCallback);
-  cell.addEventListener("pointerleave", pointerLeaveCallback);
+  // cell.addEventListener("pointerenter", pointerEnterCallback);
+  // cell.addEventListener("pointerleave", pointerLeaveCallback);
 }
 
 function initGridListeners() {
   // event delegation
   grid.addEventListener("pointerdown", pointerDownGridCallback);
+  grid.addEventListener("pointermove", pointerMoveGridCallback);
+  grid.addEventListener("pointerleave", pointerLeaveGridCallback);
 }
 
 /* Mode Buttons Functions -------------------------------------------------- */
@@ -478,11 +511,11 @@ function setFadeColorFunctions() {
   if (currentBtn === fadeColorBtn) {
     updateCurrentFadeColor = updateCurrentFadeColorFromCellColor_enabled;
     setCurrentFadeColor = () => {};
-    console.log("cell");
+    // console.log("cell");
   } else if (currentBtn === gradientColorBtn) {
     updateCurrentFadeColor = updateCurrentFadeColorFromCustomColor_enabled;
     setCurrentFadeColor = setCurrentFadeColorFromCustomColor_enabled;
-    console.log("custom");
+    // console.log("custom");
   } else {
     updateCurrentFadeColor = () => {};
     setCurrentFadeColor = () => {};
@@ -503,26 +536,26 @@ function initCellsFadeData() {
 function updateCurrentFadeColorFromCellColor_enabled(ptrId, cell) {
   // fade mode
   cell.fadeIndex++;
-  console.log("   (UPDATE cell IDX TO ", cell.fadeIndex, ")"); /* debug */
+  // console.log("   (UPDATE cell IDX TO ", cell.fadeIndex, ")"); /* debug */
 }
 
 function setCurrentFadeColorFromCustomColor_enabled(ptrId, val = 0) {
   currentFadeIndexList[ptrId] = val;
-  console.log(
-    "   (RESET IDX TO ",
-    currentFadeIndexList[ptrId],
-    ")",
-  ); /* debug */
+  // console.log(
+  //   "   (RESET IDX TO ",
+  //   currentFadeIndexList[ptrId],
+  //   ")",
+  // ); /* debug */
 }
 
 function updateCurrentFadeColorFromCustomColor_enabled(ptrId) {
   // gradient mode
   currentFadeIndexList[ptrId]++;
-  console.log(
-    "   (UPDATE IDX TO ",
-    currentFadeIndexList[ptrId],
-    ")",
-  ); /* debug */
+  // console.log(
+  //   "   (UPDATE IDX TO ",
+  //   currentFadeIndexList[ptrId],
+  //   ")",
+  // ); /* debug */
 }
 
 function cssFadeColorFromCustomColor(ptrId) {
