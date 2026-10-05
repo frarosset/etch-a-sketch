@@ -179,9 +179,7 @@ function createGrid(gridRows, gridCols) {
       cell.dataset.id = cellId;
       cellId++;
 
-      cell.addEventListener("pointerdown", pointerDownCallback);
-      cell.addEventListener("pointerenter", pointerEnterCallback);
-      cell.addEventListener("pointerleave", pointerLeaveCallback);
+      initCellListeners(cell);
 
       row.appendChild(cell);
     }
@@ -315,24 +313,21 @@ function deleteGrid() {
 function pointerDownCallback(e) {
   const cell = e.target;
   const ptrId = e.pointerId;
+  const pointerType = e.pointerType.toUpperCase();
   cell.releasePointerCapture(ptrId); // Important! (see above)
   console.log("down", ptrId, downCell, cell.dataset.id, currentFadeIndexList);
 
   if (cell.colorSetOnEnterOrDown) {
     if (downCell != cell.dataset.id) {
-      console.log(`New ${e.pointerType.toUpperCase()} down in this cell`);
+      console.log(`New ${pointerType} down in this cell`);
       setCurrentFadeColor(ptrId);
     } else {
-      console.log(
-        `Successive ${e.pointerType.toUpperCase()} down in this cell`,
-      );
+      console.log(`Successive ${pointerType} down in this cell`);
       updateCurrentFadeColor(ptrId, cell);
     }
     cell.currentColor = penColor(ptrId, cell);
   } else {
-    console.log(
-      `New ${e.pointerType.toUpperCase()} down in this cell (NO COLOR SET)`,
-    );
+    console.log(`New ${pointerType} down in this cell (NO COLOR SET)`);
     setCurrentFadeColor(ptrId);
     cell.currentColor = getBackgroundColor(cell);
     cell.colorSetOnEnterOrDown = true;
@@ -344,7 +339,13 @@ function pointerDownCallback(e) {
 function pointerEnterCallback(e) {
   const cell = e.target;
   const ptrId = e.pointerId;
-  console.log("enter", ptrId, downCell, cell.dataset.id, currentFadeIndexList);
+  console.log(
+    "\nenter",
+    ptrId,
+    downCell,
+    cell.dataset.id,
+    currentFadeIndexList,
+  );
 
   if (downCell == cell.dataset.id) {
     setCurrentFadeColor(ptrId, downIndex);
@@ -382,8 +383,33 @@ function pointerLeaveCallback(e) {
   } else {
     updateCurrentFadeColor(ptrId, cell);
   }
+}
 
-  console.log("");
+function extractClosestCellE(e) {
+  return {
+    target: e.target.closest(".cellOfGrid"),
+    pointerId: e.pointerId,
+    pointerType: e.pointerType,
+    buttons: e.buttons,
+  };
+}
+
+function pointerDownGridCallback(e) {
+  const eCell = extractClosestCellE(e);
+  if (!eCell.target) return; // Clicked outside a cell (e.g., on a row gap or grid background)
+
+  pointerDownCallback(eCell);
+}
+
+function initCellListeners(cell) {
+  // cell.addEventListener("pointerdown", pointerDownCallback); // use event delegation
+  cell.addEventListener("pointerenter", pointerEnterCallback);
+  cell.addEventListener("pointerleave", pointerLeaveCallback);
+}
+
+function initGridListeners() {
+  // event delegation
+  grid.addEventListener("pointerdown", pointerDownGridCallback);
 }
 
 /* Mode Buttons Functions -------------------------------------------------- */
@@ -604,9 +630,6 @@ eraserBtn.addEventListener("click", eraserBtnCallback);
 clearGridBtn.addEventListener("click", clearGridBtnCallback);
 
 toggleGridBtn.addEventListener("click", toggleGridBtnCallback);
-
-// TODO
-//  newGridBtn
 
 /* NoUISliders ----------------------------------------- */
 
@@ -1221,4 +1244,5 @@ initNewGridSettings();
 let currentBtn = oneColorBtn;
 selectBtn(oneColorBtn);
 
+initGridListeners();
 createGrid(gridRows, gridCols);
